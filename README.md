@@ -1,111 +1,137 @@
 # Diadia Image Converter
 
-Diadia Image Converter 是一个 Windows 桌面批量图片格式转换工具，支持把常见图片转换为 JPG、PNG、WebP、BMP 或 TIFF。软件以保护原文件为第一原则：不会删除原始图片，默认不会覆盖已有输出文件。
+A modern, privacy-first Windows desktop app for **batch converting images** between
+JPG, PNG, WebP, BMP, TIFF and HEIC/HEIF. It is built around one rule: **your original
+photos are never deleted and never overwritten**.
 
-## 功能列表
+[![CI](https://github.com/dosheda/ImageConverter/actions/workflows/ci.yml/badge.svg)](https://github.com/dosheda/ImageConverter/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4)
+![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6)
 
-- 支持拖拽单个图片文件或整个文件夹。
-- 支持输入格式：`.jpg` / `.jpeg` / `.png` / `.webp` / `.heic` / `.heif` / `.bmp` / `.tif` / `.tiff`。
-- 文件夹中的其他文件类型会自动忽略，并在底部提示已忽略的不支持文件数量。
-- 支持输出格式：JPG、PNG、WebP、BMP、TIFF；默认 JPG。
-- 允许同格式转换，例如 WebP 转 WebP、JPG 转 JPG，可用于压缩或重新编码。
-- 拖入文件夹时递归扫描子目录。
-- 文件列表显示原始路径、输出路径、文件大小、状态和失败原因。
-- 支持选择输出目录、命名规则、输出格式、JPG/WebP 质量、EXIF/GPS、目录结构和覆盖选项。
-- 支持开始转换、取消转换、清空列表。
-- 取消后再次开始会继续未完成任务，已经成功的文件不会重复转换。
-- 转换在后台执行，避免 UI 卡死。
-- 默认不覆盖已有输出文件；重名时自动生成 `_1`、`_2` 后缀。
-- 写入输出文件时先写临时文件，成功后再移动到最终路径。
-- 支持保留 EXIF，默认不保留 GPS 位置信息。
-- 支持界面语言切换：简体中文、繁體中文、English、Čeština、Deutsch、Español、Français、Italiano、日本語、한국어、Polski、Português (Brasil)、Русский、Türkçe。
-- 支持三种命名规则：
-  - 保留原文件名：`IMG_1234.HEIC -> IMG_1234.jpg`
-  - 拍摄日期时间 + 原文件名：`IMG_1234.HEIC -> 2024-08-12_15-32-08_IMG_1234.jpg`
-  - 日期 + 原文件名：`IMG_1234.HEIC -> 2024-08-12_IMG_1234.jpg`
-- 设置保存到用户目录，下次打开会自动恢复。
-- 每次转换在程序目录下的 `logs` 文件夹生成日志。
+| Light | Dark |
+| :---: | :---: |
+| ![Light theme](docs/screenshots/light.png) | ![Dark theme](docs/screenshots/dark.png) |
 
-## 如何运行
+---
 
-当前 MVP 使用 `.NET 9 WPF`，目标系统是 Windows 10 / Windows 11。
+## Features
+
+- **Drag & drop** single files or whole folders (folders are scanned recursively).
+- **Inputs:** `.jpg` `.jpeg` `.png` `.webp` `.heic` `.heif` `.bmp` `.tif` `.tiff`.
+  Unsupported files in a folder are ignored, with a count shown at the bottom.
+- **Outputs:** JPG, PNG, WebP, BMP, TIFF (JPG by default).
+- **Same-format re-encoding** (e.g. WebP → WebP, JPG → JPG) for compression.
+- Adjustable **JPG/WebP quality**, output directory, naming rule, and folder-structure preservation.
+- **EXIF handling:** keep EXIF metadata, with **GPS stripped by default** for privacy.
+- **Safe writes:** files are written to a temporary path first, then moved into place.
+  Duplicate names get `_1`, `_2`… suffixes instead of overwriting (unless you opt in).
+- **Resumable:** cancel mid-run and press Start again — already-converted files are skipped.
+- **Non-blocking UI:** conversion runs in the background; the window never freezes.
+- **Light / Dark themes** with a one-click toggle, remembered between sessions.
+- **14 UI languages:** 简体中文 · 繁體中文 · English · Čeština · Deutsch · Español ·
+  Français · Italiano · 日本語 · 한국어 · Polski · Português (Brasil) · Русский · Türkçe.
+- Three **naming rules:**
+  - Keep original name: `IMG_1234.HEIC → IMG_1234.jpg`
+  - Capture date/time + name: `IMG_1234.HEIC → 2024-08-12_15-32-08_IMG_1234.jpg`
+  - Date + name: `IMG_1234.HEIC → 2024-08-12_IMG_1234.jpg`
+- Settings are saved to your user profile; every run writes a log to the app's `logs` folder.
+
+## Getting started
+
+Requires the [.NET 9 SDK](https://dotnet.microsoft.com/download) on Windows 10/11.
+
+```powershell
+# Build
+dotnet build
+
+# Run
+dotnet run --project .\src\DiadiaHeicConverter.App\DiadiaHeicConverter.App.csproj
+
+# Test
+dotnet test
+
+# Publish a self-contained portable build
+dotnet publish .\src\DiadiaHeicConverter.App\DiadiaHeicConverter.App.csproj `
+  -c Release -r win-x64 --self-contained true -o .\artifacts\DiadiaImageConverter-win-x64
+```
+
+## How to convert
+
+1. Launch Diadia Image Converter.
+2. Drag image files or a folder onto the drop zone.
+3. Choose an output directory.
+4. Adjust output format, JPG/WebP quality, naming rule, EXIF/GPS, folder structure and overwrite as needed.
+5. (Optional) Switch UI language, or toggle the light/dark theme (top-right).
+6. Click **Start**.
+7. When finished, click **Open output folder**.
+
+## Tech stack
+
+- **.NET 9 + WPF** — Windows desktop UI.
+- **MVVM** via [`CommunityToolkit.Mvvm`](https://www.nuget.org/packages/CommunityToolkit.Mvvm).
+- **[Magick.NET](https://github.com/dlemstra/Magick.NET)** (`Magick.NET-Q16-x64`, Apache-2.0) — the image decode/encode engine.
+
+The codebase is layered into `Models`, `Services` (interface + implementation pairs),
+`ViewModels` and `Views`, with the conversion logic fully isolated in services and
+covered by unit tests.
+
+## Privacy & safety
+
+- Runs **fully offline** — no image is ever uploaded and no cloud service is contacted.
+- The app has **no feature to delete original files**.
+- Output is never overwritten unless you explicitly enable it.
+- Logs record input/output paths and success/failure status — avoid sharing logs that
+  contain private paths.
+
+## A note on HEIC / HEIF
+
+HEIC/HEIF support relies on the ImageMagick / libheif / HEVC (H.265) stack bundled with
+Magick.NET. HEVC/H.265 may carry **patent or licensing obligations** depending on your
+region and use case. Some exotic HEIC encodings may also fail to decode. Before shipping
+a commercial distribution, review the dependency chain, binary distribution method and the
+compliance requirements of your target market.
+
+## Known limitations
+
+- Static images only — no multi-frame export for GIF or animated WebP.
+- PNG/BMP/TIFF do not currently expose dedicated compression parameters (the quality
+  slider applies to JPG/WebP).
+- No installer yet; the MVP ships as a Windows x64 portable build.
+
+## License
+
+Released under the [MIT License](LICENSE). Note that bundled third-party components
+(ImageMagick/libheif/HEVC) carry their own licenses and, in the case of HEVC, potential
+patent considerations — see the note above.
+
+---
+
+## 中文说明
+
+Diadia Image Converter 是一个**注重隐私的 Windows 桌面批量图片转换工具**，支持在
+JPG、PNG、WebP、BMP、TIFF、HEIC/HEIF 之间互转。核心原则：**绝不删除、绝不覆盖你的原始图片**。
+
+**主要特性**
+
+- 拖拽单个文件或整个文件夹（递归扫描子目录），不支持的文件自动忽略并计数提示。
+- 输出 JPG / PNG / WebP / BMP / TIFF；支持同格式重新编码用于压缩。
+- 可调 JPG/WebP 质量、输出目录、命名规则、目录结构保留。
+- 支持保留 EXIF，**默认剥离 GPS 位置信息**。
+- 先写临时文件再移动到最终路径；重名自动加 `_1`、`_2` 后缀，默认不覆盖。
+- 取消后再次开始会**续跑**，已成功的文件不重复转换；转换在后台执行，界面不卡死。
+- **亮 / 暗主题**一键切换并记忆；**14 种界面语言**。
+
+**运行**
 
 ```powershell
 dotnet build
 dotnet run --project .\src\DiadiaHeicConverter.App\DiadiaHeicConverter.App.csproj
-```
-
-运行测试：
-
-```powershell
 dotnet test
 ```
 
-发布便携版：
+**隐私**：软件完全离线运行，不上传图片、不连接云端；没有删除原文件的功能。日志会记录
+输入/输出路径与成功/失败状态，请勿公开分享含隐私路径的日志。
 
-```powershell
-dotnet publish .\src\DiadiaHeicConverter.App\DiadiaHeicConverter.App.csproj -c Release -r win-x64 --self-contained true -o .\artifacts\DiadiaImageConverter-win-x64
-```
-
-## 如何转换图片
-
-1. 打开 Diadia Image Converter。
-2. 把图片文件或包含图片的文件夹拖进窗口上方的拖拽区域。
-3. 选择输出目录。
-4. 按需要调整输出格式、JPG/WebP 质量、命名规则、EXIF/GPS、目录结构和覆盖选项。
-5. 如需切换语言，在设置区选择“语言”。
-6. 点击“开始转换”。
-7. 转换完成后点击“打开输出文件夹”查看输出图片。
-
-## 常见问题
-
-### 会删除原始图片吗？
-
-不会。软件没有删除原文件的功能。
-
-### 已经存在同名输出文件会怎样？
-
-默认不会覆盖。软件会自动生成新名字，例如 `IMG_1234_1.jpg`、`IMG_1234_2.webp`。只有勾选“允许覆盖已有输出文件”后才会覆盖已有输出文件。若同格式转换的输出路径正好等于源文件路径，软件仍会自动改名，避免破坏原图。
-
-### 同格式转换为什么有用？
-
-同格式转换可用于压缩或重新编码。例如一张很大的 `.webp` 可以重新输出为质量更低、体积更小的 `.webp`；一张 `.jpg` 也可以重新编码为新的 `.jpg`。
-
-### 哪些格式支持质量设置？
-
-当前质量滑块主要作用于 JPG 和 WebP。PNG、BMP、TIFF 暂时不暴露单独压缩参数，质量值会保留在统一设置里，后续可以扩展。
-
-### 为什么转换失败？
-
-常见原因包括文件损坏、HEIC/HEIF 编码暂不支持、文件正在被占用、没有写入权限、路径过长或磁盘空间不足。列表中会显示简短原因，详细信息记录在 `logs` 文件夹。
-
-### 文件夹里有 RAR、MP3、MP4 会怎样？
-
-这些文件会被自动忽略，不会加入转换列表。软件会在底部提示已忽略的不支持文件数量。
-
-### 取消转换后会发生什么？
-
-当前任务会尽快停止，未开始的任务会标记为“已取消”。已经成功生成的图片会保留。再次点击“开始转换”时，软件只会继续处理等待中、失败或已取消的任务，不会重复转换已经成功的文件。
-
-## 已知限制
-
-- 当前仅处理静态图片，不支持 GIF 或动画 WebP 的多帧导出。
-- HEIC/HEIF 解码能力依赖 Magick.NET 当前打包的 ImageMagick 能力；部分特殊编码可能无法解码。
-- PNG、BMP、TIFF 暂不提供单独压缩参数。
-- 目前没有安装包，MVP 优先提供 Windows x64 便携版 zip。
-- 亮色/暗色主题结构已预留，MVP 默认启用亮色主题。
-- 多语言目前覆盖应用主界面、状态、常见错误提示和转换进度；README 仍以中文为主。
-
-## 依赖说明
-
-- `.NET 9 WPF`：Windows 桌面应用框架。
-- `CommunityToolkit.Mvvm`：MVVM 命令和属性通知。
-- `Magick.NET-Q16-x64`：图片读取和转换引擎，NuGet 包使用 Apache-2.0 许可证。
-
-HEIC/HEIF 支持通常涉及 ImageMagick、libheif、HEVC/H.265 等组件。HEVC/H.265 在不同地区和用途下可能存在专利或授权风险。正式发布前需要再次确认依赖链、二进制分发方式和目标市场的合规要求。
-
-## 隐私说明
-
-软件离线运行，不上传用户图片，不连接云端服务。图片读取、转换、日志和设置都保存在本机。
-
-日志会记录输入路径、输出路径、成功/失败状态和异常信息。请不要把包含隐私路径的日志公开分享。
+**HEIC/HEIF 提示**：解码依赖 ImageMagick / libheif / HEVC(H.265)，HEVC 在部分地区/用途下
+可能涉及专利或授权问题，正式商用分发前请自行确认合规。
