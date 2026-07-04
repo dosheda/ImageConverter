@@ -3,11 +3,18 @@
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/) 风格，版本号遵循 [SemVer](https://semver.org/)。
 
 ## [Unreleased]
+
+## [0.3.1] — 2026-07-04
 ### 新增 / Added
 - 转换成功后记录输出文件大小，文件行显示原大小到新大小和压缩比例。
 - 顶部成果区显示完成百分比、已节省空间和平均压缩比例。
 - 成功行支持打开转换后的图片、双击打开、右键在文件夹中显示、复制输出路径、打开源文件位置。
 - 失败行支持重试单个文件。
+
+### 变更 / Changed
+- 进一步贴近 Inspector 设计稿：补齐 Header 帮助按钮、AddBar 浏览入口、输出标题菱形、主按钮箭头和 footer 文件夹图标。
+- 修正输出格式胶囊与主题分段控件的选中态文字颜色，选中后使用白字以保持对比度。
+- 调整 Inspector 格式胶囊间距，使 JPG / PNG / WebP / BMP / TIFF 在目标宽度下一行显示。
 
 ## [0.3.0] — 2026-07-04
 ### 新增 / Added
@@ -40,7 +47,8 @@
 - 取消后续跑、安全写入（先临时文件后移动）、绝不删除或覆盖原图。
 - 14 种界面语言；设置持久化；转换日志。
 
-[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.1
 [0.3.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.0
 [0.2.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.2.0
 [0.1.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.1.0
