@@ -5,6 +5,8 @@ JPG, PNG, WebP, BMP, TIFF and HEIC/HEIF. It is built around one rule: **your ori
 photos are never deleted and never overwritten**.
 
 [![CI](https://github.com/dosheda/ImageConverter/actions/workflows/ci.yml/badge.svg)](https://github.com/dosheda/ImageConverter/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/dosheda/ImageConverter?sort=semver)](https://github.com/dosheda/ImageConverter/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/dosheda/ImageConverter/total)](https://github.com/dosheda/ImageConverter/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6)

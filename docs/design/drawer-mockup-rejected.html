@@ -1,0 +1,541 @@
+<style>
+  :root {
+    --font: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
+  }
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: var(--font);
+    /* neutral desktop backdrop, faint indigo bias */
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #e7e9f5 0%, #dfe1ec 40%, #d5d7e4 100%);
+    color: #111827;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 34px 20px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .lead {
+    width: 100%;
+    max-width: 1060px;
+    margin: 0 0 20px;
+  }
+  .lead h1 {
+    font-size: 15px; font-weight: 600; letter-spacing: .01em;
+    color: #4338CA; margin: 0 0 4px; text-transform: uppercase;
+  }
+  .lead p { margin: 0; font-size: 13.5px; color: #4b5169; max-width: 68ch; line-height: 1.5; }
+
+  /* ===================== APP WINDOW ===================== */
+  .window {
+    width: 100%; max-width: 1060px;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid rgba(15,23,42,.14);
+    box-shadow: 0 30px 60px -24px rgba(20,20,60,.45), 0 8px 20px -12px rgba(20,20,60,.3);
+    background: var(--bg);
+    color: var(--text);
+
+    /* ---- LIGHT tokens (mirror the app's Light.xaml) ---- */
+    --bg: #F3F4F7;
+    --surface: #FFFFFF;
+    --surface-2: #F9FAFB;
+    --text: #111827;
+    --muted: #6B7280;
+    --subtle: #9CA3AF;
+    --border: #E5E7EB;
+    --divider: #EEF0F3;
+    --accent: #4F46E5;
+    --accent-hover: #4338CA;
+    --accent-soft: #EEF2FF;
+    --drop-bg: #EEF2FF;
+    --drop-border: #C7D2FE;
+    --input-bg: #FFFFFF;
+    --input-border: #D1D5DB;
+    --shadow: rgba(15,23,42,.10);
+    --ok: #16A34A;  --ok-bg: #ECFDF3;
+    --run: #2563EB; --run-bg: #EEF3FF;
+    --warn:#B45309;  --warn-bg:#FEF6E7;
+    --fail:#DC2626; --fail-bg:#FEF2F2;
+    --wait:#6B7280; --wait-bg:#F1F2F5;
+    --violet:#7C3AED; --violet-bg:#F3EEFE;
+  }
+  .window[data-theme="dark"] {
+    /* ---- DARK tokens (mirror the app's Dark.xaml) ---- */
+    --bg: #0B1120;
+    --surface: #1E293B;
+    --surface-2: #172033;
+    --text: #F1F5F9;
+    --muted: #94A3B8;
+    --subtle: #64748B;
+    --border: #334155;
+    --divider: #273244;
+    --accent: #6366F1;
+    --accent-hover: #818CF8;
+    --accent-soft: #312E81;
+    --drop-bg: #1B2440;
+    --drop-border: #4F46E5;
+    --input-bg: #0F172A;
+    --input-border: #334155;
+    --shadow: rgba(0,0,0,.4);
+    --ok:#4ADE80;  --ok-bg:#12351F;
+    --run:#60A5FA; --run-bg:#15294C;
+    --warn:#FBBF24; --warn-bg:#39300F;
+    --fail:#F87171; --fail-bg:#3A1B1B;
+    --wait:#94A3B8; --wait-bg:#26303F;
+    --violet:#A78BFA; --violet-bg:#2A2350;
+  }
+
+  /* ---- OS title bar ---- */
+  .titlebar {
+    height: 38px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6px 0 14px; background: var(--surface); border-bottom: 1px solid var(--divider);
+  }
+  .titlebar .t { font-size: 12.5px; color: var(--muted); font-weight: 500; }
+  .winbtns { display: flex; gap: 2px; }
+  .winbtns button {
+    width: 40px; height: 30px; border: 0; background: transparent; color: var(--muted);
+    font-size: 12px; border-radius: 6px; cursor: default;
+  }
+  .winbtns button:hover { background: var(--surface-2); }
+  .winbtns button.close:hover { background: #E81123; color: #fff; }
+
+  /* ---- in-app header ---- */
+  .appbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 14px; }
+  .brand { display: flex; align-items: center; gap: 13px; }
+  .logo {
+    width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center;
+    color: #fff; font-size: 17px; font-weight: 700;
+    background: linear-gradient(135deg, #6366F1, #7C3AED 55%, #8B5CF6);
+    box-shadow: 0 6px 14px -6px rgba(99,102,241,.7);
+  }
+  .brand h2 { font-size: 18px; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 9px; }
+  .vpill {
+    font-size: 11px; font-weight: 600; color: var(--accent);
+    background: var(--accent-soft); padding: 2px 8px; border-radius: 7px; letter-spacing: .02em;
+  }
+  .brand .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .head-actions { display: flex; gap: 8px; }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--border);
+    background: transparent; color: var(--text); font-size: 15px; cursor: pointer;
+    display: grid; place-items: center; transition: background .15s, border-color .15s;
+  }
+  .icon-btn:hover { background: var(--surface-2); }
+  .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---- content ---- */
+  .content { padding: 0 20px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* slim "add more" bar (drop zone shrinks once files exist) */
+  .addbar {
+    display: flex; align-items: center; gap: 12px;
+    border: 1.5px dashed var(--drop-border); background: var(--drop-bg);
+    border-radius: 12px; padding: 11px 16px; color: var(--muted); font-size: 13px;
+  }
+  .addbar .up {
+    width: 30px; height: 30px; border-radius: 9px; background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center; font-size: 15px; flex: none;
+  }
+  .addbar b { color: var(--text); font-weight: 600; }
+  .addbar .browse { margin-left: auto; color: var(--accent); font-weight: 600; cursor: pointer; }
+  .addbar .browse:hover { text-decoration: underline; }
+
+  /* file list — cards, not a spreadsheet */
+  .list { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 13px; overflow: hidden; }
+  .row { display: flex; align-items: center; gap: 14px; padding: 12px 15px; border-top: 1px solid var(--divider); transition: background .12s; }
+  .row:first-child { border-top: 0; }
+  .row:hover { background: var(--surface-2); }
+  .fmt {
+    width: 42px; height: 42px; border-radius: 10px; flex: none; display: grid; place-items: center;
+    font-size: 10.5px; font-weight: 700; letter-spacing: .02em;
+  }
+  .fmt.heic { color: var(--violet); background: var(--violet-bg); }
+  .fmt.png  { color: var(--run);   background: var(--run-bg); }
+  .fmt.webp { color: var(--ok);    background: var(--ok-bg); }
+  .names { min-width: 0; flex: 1; }
+  .names .conv { font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+  .names .conv .arrow { color: var(--subtle); font-weight: 400; }
+  .names .conv .to { color: var(--muted); font-weight: 500; }
+  .names .path { font-size: 11.5px; color: var(--subtle); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .size { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; flex: none; width: 66px; text-align: right; }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; flex: none;
+    font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 999px; min-width: 76px; justify-content: center;
+  }
+  .chip .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .chip.ok   { color: var(--ok);   background: var(--ok-bg); }
+  .chip.ok   .dot { background: var(--ok); }
+  .chip.wait { color: var(--wait); background: var(--wait-bg); }
+  .chip.wait .dot { background: var(--wait); }
+  .chip.fail { color: var(--fail); background: var(--fail-bg); }
+  .chip.fail .dot { background: var(--fail); }
+  .reason { font-size: 11.5px; color: var(--fail); flex: none; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* options summary + expander */
+  .options { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; }
+  .opt-summary { display: flex; align-items: center; gap: 10px; padding: 13px 16px; cursor: pointer; font-size: 13px; }
+  .opt-summary .k { color: var(--muted); }
+  .opt-summary .v { color: var(--text); font-weight: 600; }
+  .opt-summary .sep { color: var(--divider); }
+  .opt-summary .more { margin-left: auto; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+  .opt-summary .caret { transition: transform .2s; }
+  .options.open .caret { transform: rotate(180deg); }
+  .opt-body { display: none; padding: 4px 16px 16px; border-top: 1px solid var(--divider); }
+  .options.open .opt-body { display: block; }
+  .opt-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px 22px; padding-top: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; color: var(--muted); }
+  .control {
+    height: 36px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text);
+    border-radius: 9px; padding: 0 12px; font: inherit; font-size: 13px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .checks { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 4px; }
+  .check { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; color: var(--text); }
+  .box { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--input-border); display: grid; place-items: center; }
+  .box.on { background: var(--accent); border-color: var(--accent); color: #fff; font-size: 11px; }
+
+  /* sticky bottom action bar */
+  .footer { display: flex; align-items: center; gap: 18px; padding: 14px 20px; background: var(--surface); border-top: 1px solid var(--border); }
+  .counts { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+  .counts b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .counts .g { color: var(--ok); } .counts .r { color: var(--fail); }
+  .cta {
+    margin-left: auto; border: 0; cursor: pointer;
+    background: var(--accent); color: #fff; font: inherit; font-size: 14px; font-weight: 600;
+    padding: 0 22px; height: 42px; border-radius: 11px; display: inline-flex; align-items: center; gap: 9px;
+    box-shadow: 0 8px 18px -8px var(--accent); transition: background .15s, transform .05s;
+  }
+  .cta:hover { background: var(--accent-hover); }
+  .cta:active { transform: translateY(1px); }
+  .cta:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .cta .arrow { font-size: 12px; }
+
+  /* ===================== SETTINGS DRAWER ===================== */
+  .scrim { position: absolute; inset: 0; background: rgba(15,23,42,.28); opacity: 0; pointer-events: none; transition: opacity .22s; z-index: 5; }
+  .window.settings-open .scrim { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: absolute; top: 0; right: 0; height: 100%; width: 340px; max-width: 86%;
+    background: var(--surface); border-left: 1px solid var(--border); z-index: 6;
+    transform: translateX(100%); transition: transform .24s cubic-bezier(.22,.61,.36,1);
+    display: flex; flex-direction: column;
+    box-shadow: -20px 0 40px -24px var(--shadow);
+  }
+  .window.settings-open .drawer { transform: translateX(0); }
+  .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--divider); }
+  .drawer-head h3 { margin: 0; font-size: 15px; font-weight: 600; }
+  .drawer-body { padding: 6px 18px 20px; overflow-y: auto; }
+  .sec { padding: 16px 0; border-bottom: 1px solid var(--divider); }
+  .sec:last-child { border-bottom: 0; }
+  .sec .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--subtle); font-weight: 600; margin-bottom: 11px; }
+
+  .segment { display: flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; gap: 3px; }
+  .segment button {
+    flex: 1; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 12.5px; font-weight: 600;
+    padding: 7px 0; border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .segment button.active { background: var(--surface); color: var(--accent); box-shadow: 0 1px 3px var(--shadow); }
+  .window[data-theme="dark"] .segment button.active { background: var(--accent-soft); color: #fff; }
+
+  .setrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
+  .setrow:first-of-type { margin-top: 0; }
+  .setrow .name { font-size: 13px; }
+  .setrow .desc { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .select { border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); border-radius: 9px; height: 34px; padding: 0 10px; font: inherit; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .select .caret { color: var(--muted); font-size: 10px; }
+
+  .toggle { width: 42px; height: 24px; border-radius: 999px; background: var(--input-border); position: relative; cursor: pointer; flex: none; transition: background .16s; }
+  .toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .16s; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+  .toggle.on { background: var(--accent); }
+  .toggle.on::after { transform: translateX(18px); }
+
+  .path-field { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .path-field .p { flex: 1; min-width: 0; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); border-radius: 9px; height: 34px; padding: 0 10px; font-size: 12px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .path-field .b { border: 1px solid var(--border); background: transparent; color: var(--text); border-radius: 9px; height: 34px; padding: 0 12px; font: inherit; font-size: 12.5px; cursor: pointer; }
+
+  .about .app { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
+  .about .app .logo { width: 34px; height: 34px; border-radius: 9px; font-size: 14px; }
+  .about .app .n { font-size: 13.5px; font-weight: 600; }
+  .about .app .n small { display: block; font-weight: 400; color: var(--muted); font-size: 11.5px; }
+  .about .links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .about .links a { font-size: 12px; color: var(--accent); text-decoration: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; }
+  .about .links a:hover { background: var(--surface-2); }
+  .about .note { font-size: 11.5px; color: var(--muted); line-height: 1.55; }
+
+  /* annotation callouts under the window */
+  .notes { width: 100%; max-width: 1060px; margin-top: 22px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .note { background: #fff; border: 1px solid #e3e5ef; border-radius: 12px; padding: 14px 15px; }
+  .note .tag { font-size: 11px; font-weight: 700; color: #4338CA; letter-spacing: .04em; text-transform: uppercase; }
+  .note h4 { margin: 7px 0 5px; font-size: 13.5px; color: #1f2433; }
+  .note p { margin: 0; font-size: 12.5px; color: #565d73; line-height: 1.5; }
+  .hint { width: 100%; max-width: 1060px; margin-top: 16px; font-size: 12.5px; color: #5a607a; display: flex; align-items: center; gap: 8px; }
+  .hint kbd { background: #fff; border: 1px solid #ccd0e0; border-bottom-width: 2px; border-radius: 6px; padding: 1px 7px; font: inherit; font-size: 11.5px; color: #3b4260; }
+
+  @media (max-width: 720px) {
+    .notes { grid-template-columns: 1fr; }
+    .size, .names .path { display: none; }
+    .footer { flex-wrap: wrap; }
+    .cta { margin-left: 0; width: 100%; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="lead">
+  <h1>设计稿 · Diadia Image Converter v0.3 方向</h1>
+  <p>同一套靛蓝 Fluent 风格，做的是减法：应用偏好收进设置抽屉，转换选项折叠，文件列表从「电子表格」变「卡片行 + 状态胶囊」，底部一个醒目的主行动。点右上角 ⚙ 看设置，用抽屉里的「浅色 / 深色」实时切换主题。</p>
+</div>
+
+<div class="window" data-theme="light" id="win">
+  <!-- OS title bar -->
+  <div class="titlebar">
+    <span class="t">Diadia Image Converter</span>
+    <div class="winbtns">
+      <button aria-label="最小化">&#9472;</button>
+      <button aria-label="最大化">&#9633;</button>
+      <button class="close" aria-label="关闭">&#10005;</button>
+    </div>
+  </div>
+
+  <!-- in-app header -->
+  <div class="appbar">
+    <div class="brand">
+      <div class="logo">&#9670;</div>
+      <div>
+        <h2>Diadia Image Converter <span class="vpill">v0.3.0</span></h2>
+        <div class="sub">批量转换图片 · 原始照片绝不删除或覆盖</div>
+      </div>
+    </div>
+    <div class="head-actions">
+      <button class="icon-btn" id="openSettings" aria-label="设置" title="设置">&#9881;</button>
+      <button class="icon-btn" aria-label="帮助" title="帮助">?</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- slim add-more bar -->
+    <div class="addbar">
+      <div class="up">&#8593;</div>
+      <div><b>拖入更多图片或文件夹</b> · 递归扫描子目录</div>
+      <span class="browse">浏览…</span>
+    </div>
+
+    <!-- file list as cards -->
+    <div class="list">
+      <div class="row">
+        <div class="fmt heic">HEIC</div>
+        <div class="names">
+          <div class="conv">IMG_0431.jpg <span class="arrow">&#8592;</span> <span class="to">IMG_0431.HEIC</span></div>
+          <div class="path">C:\Users\aa\Pictures\2024\夏威夷\IMG_0431.HEIC</div>
+        </div>
+        <div class="size">3.2 MB</div>
+        <div class="chip ok"><span class="dot"></span>成功</div>
+      </div>
+
+      <div class="row">
+        <div class="fmt heic">HEIC</div>
+        <div class="names">
+          <div class="conv">IMG_0432.jpg <span class="arrow">&#8592;</span> <span class="to">IMG_0432.HEIC</span></div>
+          <div class="path">C:\Users\aa\Pictures\2024\夏威夷\IMG_0432.HEIC</div>
+        </div>
+        <div class="size">2.8 MB</div>
+        <div class="chip ok"><span class="dot"></span>成功</div>
+      </div>
+
+      <div class="row">
+        <div class="fmt png">PNG</div>
+        <div class="names">
+          <div class="conv">sunset.webp <span class="arrow">&#8592;</span> <span class="to">sunset.png</span></div>
+          <div class="path">C:\Users\aa\Desktop\导出\sunset.png</div>
+        </div>
+        <div class="size">5.1 MB</div>
+        <div class="chip wait"><span class="dot"></span>等待中</div>
+      </div>
+
+      <div class="row">
+        <div class="fmt heic">HEIC</div>
+        <div class="names">
+          <div class="conv">DSC_1090.jpg <span class="arrow">&#8592;</span> <span class="to">DSC_1090.heic</span></div>
+          <div class="path">C:\Users\aa\Pictures\相机\DSC_1090.heic</div>
+        </div>
+        <div class="size">4.0 MB</div>
+        <div class="chip wait"><span class="dot"></span>等待中</div>
+      </div>
+
+      <div class="row">
+        <div class="fmt heic">HEIC</div>
+        <div class="names">
+          <div class="conv" style="color:var(--muted)">broken.heic</div>
+          <div class="path">C:\Users\aa\Downloads\broken.heic</div>
+        </div>
+        <div class="reason">图片可能已损坏</div>
+        <div class="chip fail"><span class="dot"></span>失败</div>
+      </div>
+
+      <div class="row">
+        <div class="fmt webp">WEBP</div>
+        <div class="names">
+          <div class="conv">beach.webp <span class="arrow">&#8592;</span> <span class="to">beach.webp</span></div>
+          <div class="path">C:\Users\aa\Pictures\beach.webp · 重新编码压缩</div>
+        </div>
+        <div class="size">2.3 MB</div>
+        <div class="chip ok"><span class="dot"></span>成功</div>
+      </div>
+    </div>
+
+    <!-- options: collapsed summary + expander -->
+    <div class="options" id="options">
+      <div class="opt-summary" id="optToggle">
+        <span class="k">输出</span><span class="v">JPG</span><span class="sep">·</span>
+        <span class="k">质量</span><span class="v">92</span><span class="sep">·</span>
+        <span class="k">命名</span><span class="v">保留原名</span>
+        <span class="more">更多选项 <span class="caret">&#9662;</span></span>
+      </div>
+      <div class="opt-body">
+        <div class="opt-grid">
+          <div class="field">
+            <label>输出格式</label>
+            <div class="control">JPG <span style="color:var(--muted)">&#9662;</span></div>
+          </div>
+          <div class="field">
+            <label>命名规则</label>
+            <div class="control">保留原文件名 <span style="color:var(--muted)">&#9662;</span></div>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label>JPG / WebP 质量 — 92</label>
+            <div class="control" style="padding:0 12px">
+              <div style="flex:1;height:6px;border-radius:3px;background:var(--divider);position:relative">
+                <div style="position:absolute;left:0;top:0;bottom:0;width:82%;border-radius:3px;background:var(--accent)"></div>
+                <div style="position:absolute;left:82%;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:var(--input-bg);border:2px solid var(--accent)"></div>
+              </div>
+            </div>
+          </div>
+          <div class="checks">
+            <span class="check"><span class="box on">&#10003;</span> 保留 EXIF 信息</span>
+            <span class="check"><span class="box"></span> 保留 GPS 位置信息</span>
+            <span class="check"><span class="box"></span> 保留原目录结构</span>
+            <span class="check"><span class="box"></span> 允许覆盖已有输出文件</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- sticky action bar -->
+  <div class="footer">
+    <div class="counts">
+      <span>共 <b>6</b> 张</span>
+      <span class="g">成功 <b>3</b></span>
+      <span>等待 <b>2</b></span>
+      <span class="r">失败 <b>1</b></span>
+    </div>
+    <button class="cta">开始转换 3 张 <span class="arrow">&#9654;</span></button>
+  </div>
+
+  <!-- settings drawer -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" aria-label="设置">
+    <div class="drawer-head">
+      <h3>设置</h3>
+      <button class="icon-btn" id="closeSettings" aria-label="关闭设置" style="width:32px;height:32px;font-size:13px">&#10005;</button>
+    </div>
+    <div class="drawer-body">
+      <div class="sec">
+        <div class="lbl">外观</div>
+        <div class="segment" id="themeSeg">
+          <button data-theme="light" class="active">&#9728; 浅色</button>
+          <button data-theme="dark">&#9789; 深色</button>
+          <button data-theme="system">&#9881; 跟随系统</button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="lbl">通用</div>
+        <div class="setrow">
+          <div><div class="name">语言</div><div class="desc">界面显示语言</div></div>
+          <div class="select">简体中文 <span class="caret">&#9662;</span></div>
+        </div>
+        <div class="path-field">
+          <div class="p">C:\Users\aa\Pictures\Diadia Image Converter Output</div>
+          <div class="b">浏览</div>
+        </div>
+        <div class="setrow">
+          <div><div class="name">完成后打开输出文件夹</div></div>
+          <div class="toggle on" data-toggle></div>
+        </div>
+        <div class="setrow">
+          <div><div class="name">同名文件自动改名</div><div class="desc">默认不覆盖，追加 _1 _2</div></div>
+          <div class="toggle on" data-toggle></div>
+        </div>
+      </div>
+
+      <div class="sec about">
+        <div class="lbl">关于</div>
+        <div class="app">
+          <div class="logo">&#9670;</div>
+          <div class="n">Diadia Image Converter<small>版本 0.2.0 · MIT License</small></div>
+        </div>
+        <div class="links">
+          <a href="#">GitHub 仓库</a>
+          <a href="#">检查更新</a>
+          <a href="#">开源许可</a>
+        </div>
+        <p class="note">离线运行，不上传任何图片。HEIC/HEIF 解码基于 ImageMagick 与 libheif。转换引擎 Magick.NET（Apache-2.0）。</p>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="notes">
+  <div class="note">
+    <div class="tag">改动 · 设置抽屉</div>
+    <h4>偏好和任务分家</h4>
+    <p>主题、语言、默认输出、关于全部收进 ⚙ 抽屉。主界面只留「这一次要动的」，不再是一堵控件墙。</p>
+  </div>
+  <div class="note">
+    <div class="tag">改动 · 列表</div>
+    <h4>卡片行取代表格</h4>
+    <p>每行是缩进有序的卡片：格式标签、转换关系、路径、大小、彩色状态胶囊。一眼扫到谁成功、谁失败。</p>
+  </div>
+  <div class="note">
+    <div class="tag">改动 · 主行动</div>
+    <h4>一个醒目的按钮</h4>
+    <p>底部固定操作条，主按钮带数量「开始转换 3 张」。半秒内知道该点哪儿，选项折叠不抢戏。</p>
+  </div>
+</div>
+
+<div class="hint">
+  <span>试试：点右上角 <kbd>&#9881; 设置</kbd> 打开抽屉，用 <kbd>浅色 / 深色</kbd> 实时切主题，点 <kbd>更多选项</kbd> 展开转换设置。</span>
+</div>
+
+<script>
+  var win = document.getElementById('win');
+  document.getElementById('openSettings').addEventListener('click', function () { win.classList.add('settings-open'); });
+  document.getElementById('closeSettings').addEventListener('click', function () { win.classList.remove('settings-open'); });
+  document.getElementById('scrim').addEventListener('click', function () { win.classList.remove('settings-open'); });
+
+  var seg = document.getElementById('themeSeg');
+  seg.addEventListener('click', function (e) {
+    var btn = e.target.closest('button');
+    if (!btn) return;
+    seg.querySelectorAll('button').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var t = btn.getAttribute('data-theme');
+    if (t === 'system') { t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+    win.setAttribute('data-theme', t);
+  });
+
+  var opt = document.getElementById('options');
+  document.getElementById('optToggle').addEventListener('click', function () { opt.classList.toggle('open'); });
+
+  document.querySelectorAll('[data-toggle]').forEach(function (t) {
+    t.addEventListener('click', function () { t.classList.toggle('on'); });
+  });
+</script>
