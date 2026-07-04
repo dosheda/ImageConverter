@@ -70,9 +70,11 @@ public sealed class MainViewModel : ObservableObject
         StartConversionCommand = new AsyncRelayCommand(StartConversionAsync, CanStartConversion);
         CancelConversionCommand = new RelayCommand(CancelConversion, () => IsConverting);
         ClearListCommand = new RelayCommand(ClearList, () => !IsConverting && Items.Count > 0);
+        BrowseInputPathsCommand = new AsyncRelayCommand(BrowseInputPathsAsync, () => !IsConverting);
         BrowseOutputDirectoryCommand = new RelayCommand(BrowseOutputDirectory, () => !IsConverting);
         OpenOutputDirectoryCommand = new RelayCommand(OpenOutputDirectory, () => !string.IsNullOrWhiteSpace(OutputDirectory));
         OpenGitHubCommand = new RelayCommand(() => OpenExternalLink("https://github.com/dosheda/ImageConverter"));
+        OpenHelpCommand = new RelayCommand(() => OpenExternalLink("https://github.com/dosheda/ImageConverter#readme"));
         OpenReleasesCommand = new RelayCommand(() => OpenExternalLink("https://github.com/dosheda/ImageConverter/releases"));
         OpenLicensesCommand = new RelayCommand(() => OpenExternalLink("https://github.com/dosheda/ImageConverter/blob/main/LICENSE"));
 
@@ -99,11 +101,15 @@ public sealed class MainViewModel : ObservableObject
 
     public IRelayCommand ClearListCommand { get; }
 
+    public IAsyncRelayCommand BrowseInputPathsCommand { get; }
+
     public IRelayCommand BrowseOutputDirectoryCommand { get; }
 
     public IRelayCommand OpenOutputDirectoryCommand { get; }
 
     public IRelayCommand OpenGitHubCommand { get; }
+
+    public IRelayCommand OpenHelpCommand { get; }
 
     public IRelayCommand OpenReleasesCommand { get; }
 
@@ -336,9 +342,11 @@ public sealed class MainViewModel : ObservableObject
 
     public double AverageReductionPercent => AverageReductionRatio * 100;
 
-    public string AverageReductionDisplay => AppStrings.Format(
-        "ReductionFmt",
-        (int)Math.Round(AverageReductionRatio * 100));
+    public string AverageReductionDisplay => AverageReductionRatio <= 0
+        ? string.Empty
+        : AppStrings.Format(
+            "ReductionFmt",
+            (int)Math.Round(AverageReductionRatio * 100));
 
     public bool HasOutputDirectory => !string.IsNullOrWhiteSpace(OutputDirectory);
 
@@ -500,6 +508,17 @@ public sealed class MainViewModel : ObservableObject
         }
     }
 
+    private async Task BrowseInputPathsAsync()
+    {
+        var selectedPaths = _dialogService.SelectInputPaths(OutputDirectory);
+        if (selectedPaths.Count == 0)
+        {
+            return;
+        }
+
+        await AddPathsAsync(selectedPaths);
+    }
+
     private void OpenOutputDirectory()
     {
         var directory = string.IsNullOrWhiteSpace(OutputDirectory)
@@ -599,6 +618,7 @@ public sealed class MainViewModel : ObservableObject
         StartConversionCommand.NotifyCanExecuteChanged();
         CancelConversionCommand.NotifyCanExecuteChanged();
         ClearListCommand.NotifyCanExecuteChanged();
+        BrowseInputPathsCommand.NotifyCanExecuteChanged();
         BrowseOutputDirectoryCommand.NotifyCanExecuteChanged();
         OpenOutputDirectoryCommand.NotifyCanExecuteChanged();
     }

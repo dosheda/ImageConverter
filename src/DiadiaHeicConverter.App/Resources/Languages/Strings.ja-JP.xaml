@@ -2,12 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime">
     <sys:String x:Key="AppTitle">Diadia Image Converter</sys:String>
-    <sys:String x:Key="DropTitle">一般的な画像ファイルまたはフォルダーをドロップ</sys:String>
-    <sys:String x:Key="DropSubtitle">フォルダーは再帰的にスキャンします。元の写真は削除も上書きもしません。</sys:String>
+    <sys:String x:Key="DropTitle">Drop more images or folders</sys:String>
+    <sys:String x:Key="DropSubtitle">Batch convert · originals are never deleted or overwritten</sys:String>
     <sys:String x:Key="OutputDirectoryLabel">出力フォルダー</sys:String>
     <sys:String x:Key="BrowseButtonText">参照</sys:String>
-    <sys:String x:Key="JpegQualityLabel">JPG/WebP 品質</sys:String>
-    <sys:String x:Key="OutputFormatLabel">出力形式</sys:String>
+    <sys:String x:Key="JpegQualityLabel">JPG / WebP quality</sys:String>
+    <sys:String x:Key="OutputFormatLabel">Format</sys:String>
     <sys:String x:Key="NamingRuleLabel">命名規則</sys:String>
     <sys:String x:Key="LanguageLabel">言語</sys:String>
     <sys:String x:Key="PreserveExifText">EXIF 情報を保持</sys:String>
@@ -68,6 +68,11 @@
     <sys:String x:Key="LanguageChangedMessage">言語を変更しました。</sys:String>
     <sys:String x:Key="SameFormatHint">同じ形式への変換は圧縮や再エンコードに使えます。JPG/WebP は品質設定を使用します。</sys:String>
     <sys:String x:Key="DialogSelectOutputTitle">出力フォルダーを選択</sys:String>
+    <sys:String x:Key="DialogSelectInputTitle">Select images to add</sys:String>
+    <sys:String x:Key="ImageFilesFilter">Image files|*.jpg;*.jpeg;*.png;*.webp;*.heic;*.heif;*.bmp;*.tif;*.tiff|All files|*.*</sys:String>
+    <sys:String x:Key="BrowseInputButtonText">Browse...</sys:String>
+    <sys:String x:Key="HelpTooltip">Help</sys:String>
+
     <sys:String x:Key="SectionOutput">Output</sys:String>
     <sys:String x:Key="SectionNaming">Naming &amp; location</sys:String>
     <sys:String x:Key="SectionMetadata">Metadata</sys:String>
@@ -91,7 +96,7 @@
     <sys:String x:Key="LinkGitHub">GitHub</sys:String>
     <sys:String x:Key="LinkCheckUpdate">Check for updates</sys:String>
     <sys:String x:Key="LinkLicenses">Licenses</sys:String>
-    <sys:String x:Key="StartButtonWithCountFmt">Convert {0} images</sys:String>
+    <sys:String x:Key="StartButtonWithCountFmt">Convert {0} images ▶</sys:String>
     <sys:String x:Key="ReductionFmt">−{0}%</sys:String>
     <sys:String x:Key="AboutMetaSuffix">MIT · Offline</sys:String>
     <sys:String x:Key="OutputPathCopiedMessage">Output path copied.</sys:String>

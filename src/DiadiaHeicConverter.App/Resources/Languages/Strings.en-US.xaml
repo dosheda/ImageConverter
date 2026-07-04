@@ -2,12 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime">
     <sys:String x:Key="AppTitle">Diadia Image Converter</sys:String>
-    <sys:String x:Key="DropTitle">Drop common image files or folders</sys:String>
-    <sys:String x:Key="DropSubtitle">Folders are scanned recursively. Original photos are never deleted or overwritten.</sys:String>
+    <sys:String x:Key="DropTitle">Drop more images or folders</sys:String>
+    <sys:String x:Key="DropSubtitle">Batch convert · originals are never deleted or overwritten</sys:String>
     <sys:String x:Key="OutputDirectoryLabel">Output folder</sys:String>
     <sys:String x:Key="BrowseButtonText">Browse</sys:String>
-    <sys:String x:Key="JpegQualityLabel">JPG/WebP quality</sys:String>
-    <sys:String x:Key="OutputFormatLabel">Output format</sys:String>
+    <sys:String x:Key="JpegQualityLabel">JPG / WebP quality</sys:String>
+    <sys:String x:Key="OutputFormatLabel">Format</sys:String>
     <sys:String x:Key="NamingRuleLabel">Naming rule</sys:String>
     <sys:String x:Key="LanguageLabel">Language</sys:String>
     <sys:String x:Key="PreserveExifText">Keep EXIF metadata</sys:String>
@@ -68,6 +68,11 @@
     <sys:String x:Key="LanguageChangedMessage">Language changed.</sys:String>
     <sys:String x:Key="SameFormatHint">Same-format conversion can reduce file size or re-encode; JPG/WebP use the quality setting.</sys:String>
     <sys:String x:Key="DialogSelectOutputTitle">Select output folder</sys:String>
+    <sys:String x:Key="DialogSelectInputTitle">Select images to add</sys:String>
+    <sys:String x:Key="ImageFilesFilter">Image files|*.jpg;*.jpeg;*.png;*.webp;*.heic;*.heif;*.bmp;*.tif;*.tiff|All files|*.*</sys:String>
+    <sys:String x:Key="BrowseInputButtonText">Browse...</sys:String>
+    <sys:String x:Key="HelpTooltip">Help</sys:String>
+
     <sys:String x:Key="SectionOutput">Output</sys:String>
     <sys:String x:Key="SectionNaming">Naming &amp; location</sys:String>
     <sys:String x:Key="SectionMetadata">Metadata</sys:String>
@@ -91,7 +96,7 @@
     <sys:String x:Key="LinkGitHub">GitHub</sys:String>
     <sys:String x:Key="LinkCheckUpdate">Check for updates</sys:String>
     <sys:String x:Key="LinkLicenses">Licenses</sys:String>
-    <sys:String x:Key="StartButtonWithCountFmt">Convert {0} images</sys:String>
+    <sys:String x:Key="StartButtonWithCountFmt">Convert {0} images ▶</sys:String>
     <sys:String x:Key="ReductionFmt">−{0}%</sys:String>
     <sys:String x:Key="AboutMetaSuffix">MIT · Offline</sys:String>
     <sys:String x:Key="OutputPathCopiedMessage">Output path copied.</sys:String>

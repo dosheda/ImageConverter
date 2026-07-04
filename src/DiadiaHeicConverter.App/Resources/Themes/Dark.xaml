@@ -86,6 +86,11 @@
     <SolidColorBrush x:Key="AccentPressedBrush" Color="{StaticResource AccentPressedColor}" />
     <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}" />
     <SolidColorBrush x:Key="AccentForegroundBrush" Color="{StaticResource AccentForegroundColor}" />
+    <LinearGradientBrush x:Key="LogoBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#6366F1" Offset="0" />
+        <GradientStop Color="#7C3AED" Offset="0.55" />
+        <GradientStop Color="#A78BFA" Offset="1" />
+    </LinearGradientBrush>
 
     <SolidColorBrush x:Key="DropZoneBackgroundBrush" Color="{StaticResource DropZoneBackgroundColor}" />
     <SolidColorBrush x:Key="DropZoneBorderBrush" Color="{StaticResource DropZoneBorderColor}" />

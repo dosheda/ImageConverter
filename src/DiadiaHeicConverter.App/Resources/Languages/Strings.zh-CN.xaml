@@ -2,12 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime">
     <sys:String x:Key="AppTitle">Diadia Image Converter</sys:String>
-    <sys:String x:Key="DropTitle">拖入常用图片文件或文件夹</sys:String>
-    <sys:String x:Key="DropSubtitle">支持递归扫描文件夹；原始照片不会被删除或覆盖</sys:String>
+    <sys:String x:Key="DropTitle">拖入更多图片或文件夹</sys:String>
+    <sys:String x:Key="DropSubtitle">批量转换 · 原始照片绝不删除或覆盖</sys:String>
     <sys:String x:Key="OutputDirectoryLabel">输出目录</sys:String>
     <sys:String x:Key="BrowseButtonText">浏览</sys:String>
-    <sys:String x:Key="JpegQualityLabel">JPG/WebP 质量</sys:String>
-    <sys:String x:Key="OutputFormatLabel">输出格式</sys:String>
+    <sys:String x:Key="JpegQualityLabel">JPG / WebP 质量</sys:String>
+    <sys:String x:Key="OutputFormatLabel">格式</sys:String>
     <sys:String x:Key="NamingRuleLabel">命名规则</sys:String>
     <sys:String x:Key="LanguageLabel">语言</sys:String>
     <sys:String x:Key="PreserveExifText">保留 EXIF 信息</sys:String>
@@ -24,7 +24,7 @@
     <sys:String x:Key="ColumnSize">大小</sys:String>
     <sys:String x:Key="ColumnStatus">状态</sys:String>
     <sys:String x:Key="ColumnReason">失败原因</sys:String>
-    <sys:String x:Key="SummaryTotal">总数</sys:String>
+    <sys:String x:Key="SummaryTotal">共</sys:String>
     <sys:String x:Key="SummarySuccess">成功</sys:String>
     <sys:String x:Key="SummaryFailed">失败</sys:String>
     <sys:String x:Key="SummarySkipped">跳过/取消</sys:String>
@@ -68,6 +68,11 @@
     <sys:String x:Key="LanguageChangedMessage">语言已切换。</sys:String>
     <sys:String x:Key="SameFormatHint">同格式转换可用于压缩或重新编码；JPG/WebP 会使用质量设置。</sys:String>
     <sys:String x:Key="DialogSelectOutputTitle">选择输出目录</sys:String>
+    <sys:String x:Key="DialogSelectInputTitle">选择要添加的图片</sys:String>
+    <sys:String x:Key="ImageFilesFilter">图片文件|*.jpg;*.jpeg;*.png;*.webp;*.heic;*.heif;*.bmp;*.tif;*.tiff|所有文件|*.*</sys:String>
+    <sys:String x:Key="BrowseInputButtonText">浏览...</sys:String>
+    <sys:String x:Key="HelpTooltip">帮助</sys:String>
+
     <sys:String x:Key="SectionOutput">输出</sys:String>
     <sys:String x:Key="SectionNaming">命名与位置</sys:String>
     <sys:String x:Key="SectionMetadata">元数据</sys:String>
@@ -91,7 +96,7 @@
     <sys:String x:Key="LinkGitHub">GitHub</sys:String>
     <sys:String x:Key="LinkCheckUpdate">检查更新</sys:String>
     <sys:String x:Key="LinkLicenses">开源许可</sys:String>
-    <sys:String x:Key="StartButtonWithCountFmt">开始转换 {0} 张</sys:String>
+    <sys:String x:Key="StartButtonWithCountFmt">开始转换 {0} 张 ▶</sys:String>
     <sys:String x:Key="ReductionFmt">−{0}%</sys:String>
     <sys:String x:Key="AboutMetaSuffix">MIT · 离线运行</sys:String>
     <sys:String x:Key="OutputPathCopiedMessage">输出路径已复制。</sys:String>

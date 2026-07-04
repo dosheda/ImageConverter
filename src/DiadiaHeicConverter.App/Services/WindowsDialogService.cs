@@ -18,4 +18,19 @@ public sealed class WindowsDialogService : IDialogService
             ? dialog.FolderName
             : null;
     }
+
+    public IReadOnlyList<string> SelectInputPaths(string initialDirectory)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = AppStrings.Get("DialogSelectInputTitle"),
+            InitialDirectory = Directory.Exists(initialDirectory) ? initialDirectory : string.Empty,
+            Multiselect = true,
+            Filter = AppStrings.Get("ImageFilesFilter")
+        };
+
+        return dialog.ShowDialog() == true
+            ? dialog.FileNames
+            : [];
+    }
 }

@@ -286,6 +286,8 @@ public sealed class MainViewModelResumeTests
     private sealed class NullDialogService : IDialogService
     {
         public string? SelectFolder(string initialDirectory) => null;
+
+        public IReadOnlyList<string> SelectInputPaths(string initialDirectory) => [];
     }
 
     private sealed class NullFileLauncherService : IFileLauncherService
