@@ -4,6 +4,8 @@
     <sys:String x:Key="AppTitle">Diadia Image Converter</sys:String>
     <sys:String x:Key="DropTitle">Drop more images or folders</sys:String>
     <sys:String x:Key="DropSubtitle">Batch convert · originals are never deleted or overwritten</sys:String>
+    <sys:String x:Key="EmptyStateTitle">Drop images or folders here</sys:String>
+    <sys:String x:Key="EmptyStateHint">JPG · PNG · WebP · HEIC · HEIF · BMP · TIFF — or a whole folder</sys:String>
     <sys:String x:Key="OutputDirectoryLabel">出力フォルダー</sys:String>
     <sys:String x:Key="BrowseButtonText">参照</sys:String>
     <sys:String x:Key="JpegQualityLabel">JPG / WebP quality</sys:String>
@@ -12,6 +14,8 @@
     <sys:String x:Key="LanguageLabel">言語</sys:String>
     <sys:String x:Key="PreserveExifText">EXIF 情報を保持</sys:String>
     <sys:String x:Key="PreserveGpsText">GPS 位置情報を保持</sys:String>
+    <sys:String x:Key="PreserveFileDateText">Keep original file date</sys:String>
+    <sys:String x:Key="ClearListButtonText">Clear</sys:String>
     <sys:String x:Key="PreserveDirectoryText">元のフォルダー構造を保持</sys:String>
     <sys:String x:Key="OverwriteText">既存の出力ファイルの上書きを許可</sys:String>
     <sys:String x:Key="PrivacyHint">注意: EXIF には撮影日時や位置情報が含まれる場合があります。GPS は既定では保持しません。</sys:String>

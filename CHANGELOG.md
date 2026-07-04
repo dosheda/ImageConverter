@@ -4,6 +4,23 @@
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-07-04
+### 修复 / Fixed
+- 修复**添加文件即闪退**的严重问题:文件行模板中两处只读属性(文件大小)被 `Run` 默认的 TwoWay 绑定劫持，导致模板实例化时抛出未捕获异常。
+- 修复浅色主题下按钮/链接文字被全局 `TextBlock` 样式染成深色、在强调色底上看不清的问题（"浏览""开始转换"等）。
+
+### 新增 / Added
+- 全局未捕获异常兜底：出错时写入 `logs/crash-*.log` 并弹窗提示，而非静默退出。
+- 空文件列表时展示大号引导拖拽区（图标 + 说明 + 浏览按钮），有文件后恢复统计与列表。
+- 文件列表新增「清空」入口。
+- 新增「保留原始文件日期」开关（默认开启）：转换后输出文件沿用源文件的创建/修改时间。
+
+### 变更 / Changed
+- 字体统一为系统字体栈 `Segoe UI, Microsoft YaHei UI`。
+- 建立统一字号尺阶（Caption 11 / Small 12 / Body 13 / Title 18 / Display 22），替换原先散乱的十余种字号。
+- 优化浅色主题各层明度与边线，页眉/主体/页脚过渡更协调一致。
+- 顶部成果区「已完成 / 已节省空间」两列改为网格对齐，基准线一致。
+
 ## [0.3.2] — 2026-07-04
 ### 修复 / Fixed
 - 修正输出格式胶囊与主题分段控件选中态文字被全局 `TextBlock` 样式覆盖的问题，确保选中后文字实际显示为白色。
@@ -51,7 +68,8 @@
 - 取消后续跑、安全写入（先临时文件后移动）、绝不删除或覆盖原图。
 - 14 种界面语言；设置持久化；转换日志。
 
-[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.4.0
 [0.3.2]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.2
 [0.3.1]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.1
 [0.3.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.0

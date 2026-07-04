@@ -12,7 +12,7 @@
         MinWidth="1040"
         MinHeight="660"
         Background="{DynamicResource WindowBackgroundBrush}"
-        FontFamily="Segoe UI"
+        FontFamily="{DynamicResource AppFontFamily}"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Ideal"
         AllowDrop="True"
@@ -54,15 +54,15 @@
                     </Border>
                     <StackPanel VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{DynamicResource AppTitle}" FontSize="17" FontWeight="SemiBold"
+                            <TextBlock Text="{DynamicResource AppTitle}" FontSize="{StaticResource FontSizeTitle}" FontWeight="SemiBold"
                                        VerticalAlignment="Center" />
                             <Border Margin="10,1,0,0" Padding="8,2" CornerRadius="7"
                                     Background="{DynamicResource AccentSoftBrush}" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding AppVersion}" FontSize="11" FontWeight="SemiBold"
+                                <TextBlock Text="{Binding AppVersion}" FontSize="{StaticResource FontSizeCaption}" FontWeight="SemiBold"
                                            Foreground="{DynamicResource AccentBrush}" />
                             </Border>
                         </StackPanel>
-                        <TextBlock Text="{DynamicResource DropSubtitle}" FontSize="11.5"
+                        <TextBlock Text="{DynamicResource DropSubtitle}" FontSize="{StaticResource FontSizeCaption}"
                                    Margin="0,1,0,0" Foreground="{DynamicResource MutedTextBrush}"
                                    TextTrimming="CharacterEllipsis" />
                     </StackPanel>
@@ -91,7 +91,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Padding="20,16,20,14">
+                <Border Grid.Row="0" Padding="20,16,20,14"
+                        Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="58" Height="58" CornerRadius="29"
                                 Background="{DynamicResource AccentSoftBrush}"
@@ -106,44 +107,54 @@
                                         <RotateTransform Angle="-90" />
                                     </Ellipse.RenderTransform>
                                 </Ellipse>
-                                <TextBlock Text="{Binding CompletionPercentDisplay}" FontSize="13" FontWeight="Bold"
+                                <TextBlock Text="{Binding CompletionPercentDisplay}" FontSize="{StaticResource FontSizeBody}" FontWeight="Bold"
                                            Foreground="{DynamicResource AccentBrush}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Grid>
                         </Border>
 
-                        <StackPanel VerticalAlignment="Center" Margin="0,0,26,0">
-                            <TextBlock Text="{DynamicResource StatCompleted}" FontSize="11.5"
-                                       Foreground="{DynamicResource MutedTextBrush}" />
-                            <TextBlock Margin="0,2,0,0">
-                                <Run Text="{Binding SucceededCount, Mode=OneWay}" FontSize="21" FontWeight="Bold" />
-                                <Run Text=" / " FontSize="13" Foreground="{DynamicResource SubtleTextBrush}" />
-                                <Run Text="{Binding TotalCount, Mode=OneWay}" FontSize="13" Foreground="{DynamicResource SubtleTextBrush}" />
-                            </TextBlock>
-                        </StackPanel>
+                        <Grid VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <StackPanel Width="180">
-                            <TextBlock Text="{DynamicResource StatSpaceSaved}" FontSize="11.5"
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource StatCompleted}"
+                                       FontSize="{StaticResource FontSizeCaption}" Margin="0,0,44,0"
                                        Foreground="{DynamicResource MutedTextBrush}" />
-                            <TextBlock Margin="0,2,0,0">
-                                <Run Text="{Binding SavedDisplay, Mode=OneWay}" FontSize="21" FontWeight="Bold"
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,3,44,0">
+                                <Run Text="{Binding SucceededCount, Mode=OneWay}" FontSize="{StaticResource FontSizeDisplay}" FontWeight="Bold" />
+                                <Run Text=" / " FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource SubtleTextBrush}" />
+                                <Run Text="{Binding TotalCount, Mode=OneWay}" FontSize="{StaticResource FontSizeBody}" Foreground="{DynamicResource SubtleTextBrush}" />
+                            </TextBlock>
+
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{DynamicResource StatSpaceSaved}"
+                                       FontSize="{StaticResource FontSizeCaption}" Foreground="{DynamicResource MutedTextBrush}" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,3,0,0">
+                                <Run Text="{Binding SavedDisplay, Mode=OneWay}" FontSize="{StaticResource FontSizeDisplay}" FontWeight="Bold"
                                      Foreground="{DynamicResource SaveBrush}" />
                                 <Run Text=" " />
-                                <Run Text="{Binding AverageReductionDisplay, Mode=OneWay}" FontSize="12"
+                                <Run Text="{Binding AverageReductionDisplay, Mode=OneWay}" FontSize="{StaticResource FontSizeSmall}"
                                      FontWeight="SemiBold" Foreground="{DynamicResource SaveBrush}" />
                             </TextBlock>
-                            <ProgressBar Minimum="0" Maximum="100"
+                            <ProgressBar Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="100"
                                          Value="{Binding AverageReductionPercent, Mode=OneWay}"
                                          Foreground="{DynamicResource SaveBrush}"
                                          Background="{DynamicResource SaveSoftBrush}"
-                                         Height="5" Width="150" Margin="0,6,0,0"
+                                         Height="5" Width="150" Margin="0,8,0,0"
                                          HorizontalAlignment="Left" />
-                        </StackPanel>
+                        </Grid>
                     </StackPanel>
                 </Border>
 
                 <Grid Grid.Row="1" Margin="20,0,20,12"
                       MinHeight="48" AllowDrop="True"
+                      Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}"
                       DragOver="OnDragOver" Drop="OnDrop">
                     <Rectangle RadiusX="11" RadiusY="11"
                                Fill="{DynamicResource DropZoneBackgroundBrush}"
@@ -163,16 +174,23 @@
                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <TextBlock Grid.Column="1" Text="{DynamicResource DropTitle}"
-                                   FontWeight="SemiBold" FontSize="12.5"
+                                   FontWeight="SemiBold" FontSize="{StaticResource FontSizeSmall}"
                                    VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                        <Button Grid.Column="2" Style="{StaticResource TextLinkButton}"
-                                Content="{DynamicResource BrowseInputButtonText}"
-                                Command="{Binding BrowseInputPathsCommand}"
-                                VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Style="{StaticResource TextLinkButton}"
+                                    Content="{DynamicResource BrowseInputButtonText}"
+                                    Command="{Binding BrowseInputPathsCommand}" />
+                            <TextBlock Text="·" Margin="4,0" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SubtleTextBrush}" />
+                            <Button Style="{StaticResource TextLinkButton}"
+                                    Content="{DynamicResource ClearListButtonText}"
+                                    Command="{Binding ClearListCommand}" />
+                        </StackPanel>
                     </Grid>
                 </Grid>
 
-                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                              Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}">
                     <ItemsControl ItemsSource="{Binding Items}" Margin="14,0,14,12">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -199,7 +217,7 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Border Grid.Column="0" Style="{StaticResource FormatBadge}" Margin="0,0,13,0">
-                                            <TextBlock Text="{Binding InputFormatLabel}" FontSize="10" FontWeight="Bold"
+                                            <TextBlock Text="{Binding InputFormatLabel}" FontSize="{StaticResource FontSizeCaption}" FontWeight="Bold"
                                                        Foreground="{DynamicResource AccentBrush}"
                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
@@ -211,7 +229,7 @@
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding OutputFileName}" FontSize="13.5" FontWeight="SemiBold"
+                                                <TextBlock Text="{Binding OutputFileName}" FontSize="{StaticResource FontSizeBody}" FontWeight="SemiBold"
                                                            TextTrimming="CharacterEllipsis">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
@@ -226,17 +244,17 @@
                                                 </TextBlock>
                                                 <TextBlock Grid.Column="1" Text="←" Margin="5,0"
                                                            Foreground="{DynamicResource SubtleTextBrush}" />
-                                                <TextBlock Grid.Column="2" Text="{Binding SourceFileName}" FontSize="13.5"
+                                                <TextBlock Grid.Column="2" Text="{Binding SourceFileName}" FontSize="{StaticResource FontSizeBody}"
                                                            Foreground="{DynamicResource MutedTextBrush}"
                                                            TextTrimming="CharacterEllipsis" />
                                             </Grid>
-                                            <TextBlock Text="{Binding DetailDisplay}" Margin="0,3,0,0" FontSize="11"
+                                            <TextBlock Text="{Binding DetailDisplay}" Margin="0,3,0,0" FontSize="{StaticResource FontSizeCaption}"
                                                        Foreground="{DynamicResource SubtleTextBrush}"
                                                        TextTrimming="CharacterEllipsis" />
                                         </StackPanel>
 
                                         <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                            <TextBlock FontSize="12.5" TextAlignment="Right" TextTrimming="CharacterEllipsis">
+                                            <TextBlock FontSize="{StaticResource FontSizeSmall}" TextAlignment="Right" TextTrimming="CharacterEllipsis">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -247,11 +265,11 @@
                                                         </Style.Triggers>
                                                     </Style>
                                                 </TextBlock.Style>
-                                                <Run Text="{Binding FileSizeDisplay}" Foreground="{DynamicResource SubtleTextBrush}" />
+                                                <Run Text="{Binding FileSizeDisplay, Mode=OneWay}" Foreground="{DynamicResource SubtleTextBrush}" />
                                                 <Run Text=" → " Foreground="{DynamicResource SubtleTextBrush}" />
-                                                <Run Text="{Binding OutputSizeDisplay}" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold" />
+                                                <Run Text="{Binding OutputSizeDisplay, Mode=OneWay}" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold" />
                                             </TextBlock>
-                                            <TextBlock Text="{Binding SizeSummaryDisplay}" FontSize="12.5"
+                                            <TextBlock Text="{Binding SizeSummaryDisplay}" FontSize="{StaticResource FontSizeSmall}"
                                                        TextAlignment="Right" TextTrimming="CharacterEllipsis">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
@@ -268,7 +286,7 @@
                                                     </Style>
                                                 </TextBlock.Style>
                                             </TextBlock>
-                                            <TextBlock Text="{Binding ReductionDisplay}" Margin="0,2,0,0" FontSize="11"
+                                            <TextBlock Text="{Binding ReductionDisplay}" Margin="0,2,0,0" FontSize="{StaticResource FontSizeCaption}"
                                                        FontWeight="Bold" Foreground="{DynamicResource SaveBrush}"
                                                        TextAlignment="Right" TextTrimming="CharacterEllipsis" />
                                         </StackPanel>
@@ -314,6 +332,38 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
+
+                <!--Empty state: welcoming full-area drop target shown before any file is added -->
+                <Grid Grid.Row="0" Grid.RowSpan="3" Margin="20,4,20,20"
+                      AllowDrop="True" DragOver="OnDragOver" Drop="OnDrop"
+                      Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
+                    <Rectangle RadiusX="18" RadiusY="18"
+                               Fill="{DynamicResource DropZoneBackgroundBrush}"
+                               Stroke="{DynamicResource DropZoneBorderBrush}"
+                               StrokeThickness="2" StrokeDashArray="6 4" />
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="360">
+                        <Border Width="76" Height="76" CornerRadius="22"
+                                Background="{DynamicResource LogoBrush}"
+                                HorizontalAlignment="Center" Margin="0,0,0,22">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="26" ShadowDepth="8" Direction="270" Opacity="0.34" Color="#6366F1" />
+                            </Border.Effect>
+                            <TextBlock Text="↑" FontSize="34" FontWeight="Bold"
+                                       Foreground="{DynamicResource AccentForegroundBrush}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Text="{DynamicResource EmptyStateTitle}" FontSize="{StaticResource FontSizeTitle}" FontWeight="SemiBold"
+                                   TextAlignment="Center" HorizontalAlignment="Center" />
+                        <TextBlock Text="{DynamicResource EmptyStateHint}" FontSize="{StaticResource FontSizeSmall}"
+                                   Foreground="{DynamicResource MutedTextBrush}"
+                                   TextAlignment="Center" TextWrapping="Wrap"
+                                   Margin="0,8,0,22" HorizontalAlignment="Center" />
+                        <Button Style="{StaticResource PrimaryButton}"
+                                Content="{DynamicResource BrowseInputButtonText}"
+                                Command="{Binding BrowseInputPathsCommand}"
+                                MinWidth="132" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
             </Grid>
 
             <!-- Inspector -->
@@ -348,7 +398,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{DynamicResource JpegQualityLabel}" Style="{StaticResource FieldLabel}"
                                                Margin="0" />
-                                    <TextBlock Grid.Column="1" Text="{Binding JpegQuality}" FontSize="12"
+                                    <TextBlock Grid.Column="1" Text="{Binding JpegQuality}" FontSize="{StaticResource FontSizeSmall}"
                                                FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" />
                                 </Grid>
                                 <Slider Minimum="1" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True"
@@ -387,6 +437,7 @@
                                            Margin="0,0,0,10" />
                                 <CheckBox Content="{DynamicResource PreserveExifText}" IsChecked="{Binding PreserveExif}" />
                                 <CheckBox Content="{DynamicResource PreserveGpsText}" IsChecked="{Binding PreserveGps}" />
+                                <CheckBox Content="{DynamicResource PreserveFileDateText}" IsChecked="{Binding PreserveFileTimestamps}" />
                                 <CheckBox Content="{DynamicResource PreserveDirectoryText}" IsChecked="{Binding PreserveDirectoryStructure}" />
                                 <CheckBox Content="{DynamicResource OverwriteText}" IsChecked="{Binding OverwriteExistingFiles}" />
                             </StackPanel>
@@ -420,13 +471,13 @@
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                     <Border Width="30" Height="30" CornerRadius="8"
                                             Background="{DynamicResource LogoBrush}" Margin="0,0,10,0">
-                                        <TextBlock Text="◆" FontSize="12" FontWeight="Bold"
+                                        <TextBlock Text="◆" FontSize="{StaticResource FontSizeSmall}" FontWeight="Bold"
                                                    Foreground="{DynamicResource AccentForegroundBrush}"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Border>
                                     <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{DynamicResource AppTitle}" FontWeight="SemiBold" FontSize="12.5" />
-                                        <TextBlock FontSize="11" Foreground="{DynamicResource MutedTextBrush}">
+                                        <TextBlock Text="{DynamicResource AppTitle}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeSmall}" />
+                                        <TextBlock FontSize="{StaticResource FontSizeCaption}" Foreground="{DynamicResource MutedTextBrush}">
                                             <Run Text="{Binding AppVersion, Mode=OneWay}" />
                                             <Run Text=" · " />
                                             <Run Text="{DynamicResource AboutMetaSuffix}" />

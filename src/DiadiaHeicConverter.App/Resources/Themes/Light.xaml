@@ -8,10 +8,10 @@
          ============================================================ -->
 
     <!-- Surfaces -->
-    <Color x:Key="WindowBackgroundColor">#F3F4F7</Color>
+    <Color x:Key="WindowBackgroundColor">#F6F7F9</Color>
     <Color x:Key="PanelBackgroundColor">#FFFFFF</Color>
     <Color x:Key="ElevatedBackgroundColor">#FFFFFF</Color>
-    <Color x:Key="SubtleBackgroundColor">#F9FAFB</Color>
+    <Color x:Key="SubtleBackgroundColor">#FBFCFD</Color>
 
     <!-- Text -->
     <Color x:Key="TextColor">#111827</Color>
@@ -19,8 +19,8 @@
     <Color x:Key="SubtleTextColor">#9CA3AF</Color>
 
     <!-- Lines -->
-    <Color x:Key="BorderColor">#E5E7EB</Color>
-    <Color x:Key="DividerColor">#EEF0F3</Color>
+    <Color x:Key="BorderColor">#E8EBEF</Color>
+    <Color x:Key="DividerColor">#F0F2F5</Color>
 
     <!-- Accent (indigo) -->
     <Color x:Key="AccentColor">#4F46E5</Color>

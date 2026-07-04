@@ -14,6 +14,8 @@ public sealed class AppSettings
 
     public bool PreserveGps { get; set; }
 
+    public bool PreserveFileTimestamps { get; set; } = true;
+
     public bool PreserveDirectoryStructure { get; set; }
 
     public bool OverwriteExistingFiles { get; set; }
@@ -32,6 +34,7 @@ public sealed class AppSettings
             NamingRule = NamingRule,
             PreserveExif = PreserveExif,
             PreserveGps = PreserveGps,
+            PreserveFileTimestamps = PreserveFileTimestamps,
             PreserveDirectoryStructure = PreserveDirectoryStructure,
             OverwriteExistingFiles = OverwriteExistingFiles,
             Theme = NormalizeTheme(Theme),

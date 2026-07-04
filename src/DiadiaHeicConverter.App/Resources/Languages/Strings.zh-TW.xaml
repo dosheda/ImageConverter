@@ -4,6 +4,8 @@
     <sys:String x:Key="AppTitle">Diadia Image Converter</sys:String>
     <sys:String x:Key="DropTitle">拖入更多圖片或資料夾</sys:String>
     <sys:String x:Key="DropSubtitle">批次轉換 · 原始照片絕不刪除或覆蓋</sys:String>
+    <sys:String x:Key="EmptyStateTitle">拖曳圖片或資料夾到這裡</sys:String>
+    <sys:String x:Key="EmptyStateHint">支援 JPG · PNG · WebP · HEIC · HEIF · BMP · TIFF，或整個資料夾</sys:String>
     <sys:String x:Key="OutputDirectoryLabel">輸出資料夾</sys:String>
     <sys:String x:Key="BrowseButtonText">瀏覽</sys:String>
     <sys:String x:Key="JpegQualityLabel">JPG / WebP 品質</sys:String>
@@ -12,6 +14,8 @@
     <sys:String x:Key="LanguageLabel">語言</sys:String>
     <sys:String x:Key="PreserveExifText">保留 EXIF 資訊</sys:String>
     <sys:String x:Key="PreserveGpsText">保留 GPS 位置資訊</sys:String>
+    <sys:String x:Key="PreserveFileDateText">保留原始檔案日期</sys:String>
+    <sys:String x:Key="ClearListButtonText">清空</sys:String>
     <sys:String x:Key="PreserveDirectoryText">保留原資料夾結構</sys:String>
     <sys:String x:Key="OverwriteText">允許覆蓋既有輸出檔</sys:String>
     <sys:String x:Key="PrivacyHint">提示：EXIF 可能包含拍攝時間與位置資訊；預設不會保留 GPS。</sys:String>

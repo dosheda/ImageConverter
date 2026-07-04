@@ -108,6 +108,58 @@ public sealed class ImageConvertServiceCancellationTests
         Assert.Equal(5, item.OutputSizeBytes);
     }
 
+    [Fact]
+    public async Task ConvertAsync_preserves_source_timestamps_when_enabled()
+    {
+        using var temp = new TestTempDirectory();
+        var source = temp.Combine("pending.heic");
+        await File.WriteAllTextAsync(source, "fake");
+        var sourceTime = new DateTime(2021, 6, 15, 8, 30, 0, DateTimeKind.Utc);
+        File.SetLastWriteTimeUtc(source, sourceTime);
+        File.SetCreationTimeUtc(source, sourceTime);
+
+        var service = new ImageConvertService(
+            new StubMetadataService(),
+            new OutputPathService(new NamingService()),
+            new WritingConvertEngine(),
+            new NullLogService());
+        var item = new ConversionTaskItem { SourcePath = source, FileSizeBytes = 10 };
+
+        await service.ConvertAsync(
+            [item],
+            new AppSettings { OutputDirectory = temp.Combine("out"), PreserveFileTimestamps = true },
+            progress: null,
+            CancellationToken.None);
+
+        Assert.Equal(sourceTime, File.GetLastWriteTimeUtc(item.OutputPath));
+        Assert.Equal(sourceTime, File.GetCreationTimeUtc(item.OutputPath));
+    }
+
+    [Fact]
+    public async Task ConvertAsync_keeps_fresh_timestamps_when_preserve_disabled()
+    {
+        using var temp = new TestTempDirectory();
+        var source = temp.Combine("pending.heic");
+        await File.WriteAllTextAsync(source, "fake");
+        var sourceTime = new DateTime(2021, 6, 15, 8, 30, 0, DateTimeKind.Utc);
+        File.SetLastWriteTimeUtc(source, sourceTime);
+
+        var service = new ImageConvertService(
+            new StubMetadataService(),
+            new OutputPathService(new NamingService()),
+            new WritingConvertEngine(),
+            new NullLogService());
+        var item = new ConversionTaskItem { SourcePath = source, FileSizeBytes = 10 };
+
+        await service.ConvertAsync(
+            [item],
+            new AppSettings { OutputDirectory = temp.Combine("out"), PreserveFileTimestamps = false },
+            progress: null,
+            CancellationToken.None);
+
+        Assert.NotEqual(sourceTime, File.GetLastWriteTimeUtc(item.OutputPath));
+    }
+
     private sealed class WaitingConvertEngine : IImageConvertEngine
     {
         public TaskCompletionSource Started { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);

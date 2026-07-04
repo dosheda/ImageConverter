@@ -7,6 +7,36 @@ namespace DiadiaHeicConverter.Tests;
 public sealed class MainViewModelResumeTests
 {
     [Fact]
+    public async Task AddPathsAsync_scans_folder_and_adds_supported_images()
+    {
+        using var temp = new TestTempDirectory();
+        var folder = temp.Combine("photos");
+        Directory.CreateDirectory(folder);
+        await File.WriteAllTextAsync(Path.Combine(folder, "a.jpg"), "fake");
+        await File.WriteAllTextAsync(Path.Combine(folder, "b.png"), "fake");
+        await File.WriteAllTextAsync(Path.Combine(folder, "note.txt"), "ignore");
+
+        var viewModel = new MainViewModel(
+            new FileScannerService(),
+            new RecordingConvertService(),
+            new OutputPathService(new NamingService()),
+            new TestSettingsService(new AppSettings
+            {
+                OutputDirectory = temp.Combine("out"),
+                LanguageCode = "zh-Hans"
+            }),
+            new NullDialogService(),
+            new LocalizationService(),
+            new ThemeService(),
+            new NullFileLauncherService());
+
+        await viewModel.AddPathsAsync(new[] { folder });
+
+        Assert.Equal(2, viewModel.Items.Count);
+        Assert.True(viewModel.HasItems);
+    }
+
+    [Fact]
     public async Task StartConversionCommand_only_submits_unfinished_items()
     {
         using var temp = new TestTempDirectory();

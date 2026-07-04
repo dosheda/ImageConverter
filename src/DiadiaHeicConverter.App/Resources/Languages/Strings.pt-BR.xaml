@@ -4,6 +4,8 @@
     <sys:String x:Key="AppTitle">Diadia Image Converter</sys:String>
     <sys:String x:Key="DropTitle">Drop more images or folders</sys:String>
     <sys:String x:Key="DropSubtitle">Batch convert · originals are never deleted or overwritten</sys:String>
+    <sys:String x:Key="EmptyStateTitle">Drop images or folders here</sys:String>
+    <sys:String x:Key="EmptyStateHint">JPG · PNG · WebP · HEIC · HEIF · BMP · TIFF — or a whole folder</sys:String>
     <sys:String x:Key="OutputDirectoryLabel">Pasta de saída</sys:String>
     <sys:String x:Key="BrowseButtonText">Procurar</sys:String>
     <sys:String x:Key="JpegQualityLabel">JPG / WebP quality</sys:String>
@@ -12,6 +14,8 @@
     <sys:String x:Key="LanguageLabel">Idioma</sys:String>
     <sys:String x:Key="PreserveExifText">Manter metadados EXIF</sys:String>
     <sys:String x:Key="PreserveGpsText">Manter dados de localização GPS</sys:String>
+    <sys:String x:Key="PreserveFileDateText">Keep original file date</sys:String>
+    <sys:String x:Key="ClearListButtonText">Clear</sys:String>
     <sys:String x:Key="PreserveDirectoryText">Manter estrutura de pastas</sys:String>
     <sys:String x:Key="OverwriteText">Permitir sobrescrever arquivos de saída</sys:String>
     <sys:String x:Key="PrivacyHint">Observação: EXIF pode incluir hora da captura e localização. GPS não é mantido por padrão.</sys:String>

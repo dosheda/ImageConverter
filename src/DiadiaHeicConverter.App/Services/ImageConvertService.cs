@@ -76,6 +76,11 @@ public sealed class ImageConvertService(
                 if (result.Status == ConversionStatus.Succeeded)
                 {
                     item.OutputSizeBytes = TryGetOutputSize(item.OutputPath);
+                    if (normalizedSettings.PreserveFileTimestamps)
+                    {
+                        TryPreserveTimestamps(item.SourcePath, item.OutputPath);
+                    }
+
                     await logService.WriteAsync($"SUCCESS input=\"{item.SourcePath}\" output=\"{item.OutputPath}\"", cancellationToken);
                 }
                 else if (result.Status == ConversionStatus.Cancelled)
@@ -146,6 +151,25 @@ public sealed class ImageConvertService(
             items.Count(item => item.Status == ConversionStatus.Failed),
             items.Count(item => item.Status == ConversionStatus.Skipped),
             items.Count(item => item.Status == ConversionStatus.Cancelled));
+    }
+
+    private static void TryPreserveTimestamps(string sourcePath, string outputPath)
+    {
+        try
+        {
+            if (!File.Exists(sourcePath) || !File.Exists(outputPath))
+            {
+                return;
+            }
+
+            var source = new FileInfo(sourcePath);
+            File.SetCreationTimeUtc(outputPath, source.CreationTimeUtc);
+            File.SetLastWriteTimeUtc(outputPath, source.LastWriteTimeUtc);
+        }
+        catch
+        {
+            // Preserving timestamps is best-effort; never fail a conversion over it.
+        }
     }
 
     private static long? TryGetOutputSize(string outputPath)

@@ -27,6 +27,7 @@ public sealed class MainViewModel : ObservableObject
     private NamingRule _selectedNamingRule;
     private bool _preserveExif;
     private bool _preserveGps;
+    private bool _preserveFileTimestamps;
     private bool _preserveDirectoryStructure;
     private bool _overwriteExistingFiles;
     private bool _isConverting;
@@ -64,6 +65,7 @@ public sealed class MainViewModel : ObservableObject
         _selectedNamingRule = settings.NamingRule;
         _preserveExif = settings.PreserveExif;
         _preserveGps = settings.PreserveGps;
+        _preserveFileTimestamps = settings.PreserveFileTimestamps;
         _preserveDirectoryStructure = settings.PreserveDirectoryStructure;
         _overwriteExistingFiles = settings.OverwriteExistingFiles;
 
@@ -238,6 +240,18 @@ public sealed class MainViewModel : ObservableObject
         }
     }
 
+    public bool PreserveFileTimestamps
+    {
+        get => _preserveFileTimestamps;
+        set
+        {
+            if (SetProperty(ref _preserveFileTimestamps, value))
+            {
+                PersistSettings();
+            }
+        }
+    }
+
     public bool PreserveDirectoryStructure
     {
         get => _preserveDirectoryStructure;
@@ -295,6 +309,8 @@ public sealed class MainViewModel : ObservableObject
     }
 
     public int TotalCount => Items.Count;
+
+    public bool HasItems => Items.Count > 0;
 
     public int SucceededCount => Items.Count(item => item.Status == ConversionStatus.Succeeded);
 
@@ -596,6 +612,7 @@ public sealed class MainViewModel : ObservableObject
     private void RefreshCounts()
     {
         OnPropertyChanged(nameof(TotalCount));
+        OnPropertyChanged(nameof(HasItems));
         OnPropertyChanged(nameof(SucceededCount));
         OnPropertyChanged(nameof(CompletedCount));
         OnPropertyChanged(nameof(FailedCount));
@@ -633,6 +650,7 @@ public sealed class MainViewModel : ObservableObject
             NamingRule = SelectedNamingRule,
             PreserveExif = PreserveExif,
             PreserveGps = PreserveGps,
+            PreserveFileTimestamps = PreserveFileTimestamps,
             PreserveDirectoryStructure = PreserveDirectoryStructure,
             OverwriteExistingFiles = OverwriteExistingFiles,
             Theme = SelectedTheme,

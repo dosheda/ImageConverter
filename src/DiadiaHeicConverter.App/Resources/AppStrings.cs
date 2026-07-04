@@ -78,7 +78,11 @@ public static class AppStrings
         ["ReductionFmt"] = "−{0}%",
         ["AboutMetaSuffix"] = "MIT · 离线运行",
         ["OutputPathCopiedMessage"] = "输出路径已复制。",
-        ["RetryingFileMessageFormat"] = "正在重试：{0}"
+        ["RetryingFileMessageFormat"] = "正在重试：{0}",
+        ["EmptyStateTitle"] = "拖拽图片或文件夹到这里",
+        ["EmptyStateHint"] = "支持 JPG · PNG · WebP · HEIC · HEIF · BMP · TIFF，或整个文件夹",
+        ["PreserveFileDateText"] = "保留原始文件日期",
+        ["ClearListButtonText"] = "清空"
     };
 
     public static string Get(string key)

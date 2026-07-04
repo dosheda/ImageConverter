@@ -9,6 +9,9 @@
                 <ResourceDictionary Source="Resources/Themes/Light.xaml" />
                 <ResourceDictionary Source="Resources/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- System font stack: Segoe UI for Latin, Microsoft YaHei UI for CJK -->
+            <FontFamily x:Key="AppFontFamily">Segoe UI, Microsoft YaHei UI</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
