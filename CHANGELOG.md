@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.4.2] — 2026-07-05
+### 修复 / Fixed
+- 拖放事件冒泡导致 `OnDrop` 触发两次、扫描重复执行，且状态栏被覆盖为“没有发现新的受支持图片文件”。现标记事件已处理，仅执行一次。
+
+### 变更 / Changed
+- 清理旧版界面遗留的约 10 个未使用本地化键（列头、隐私提示等），减少各语言文件冗余。
+
 ## [0.4.1] — 2026-07-05
 ### 新增 / Added
 - 补全其余 11 种界面语言的翻译（de/es/fr/it/ja/ko/pl/pt-BR/ru/tr/cs），此前 v0.3/v0.4 新增文案在这些语言下仍为英文占位。
@@ -75,7 +82,8 @@
 - 取消后续跑、安全写入（先临时文件后移动）、绝不删除或覆盖原图。
 - 14 种界面语言；设置持久化；转换日志。
 
-[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/dosheda/ImageConverter/releases/tag/v0.4.2
 [0.4.1]: https://github.com/dosheda/ImageConverter/releases/tag/v0.4.1
 [0.4.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.4.0
 [0.3.2]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.2
