@@ -47,6 +47,11 @@ public partial class MainWindow : Window
 
     private async void OnDrop(object sender, System.Windows.DragEventArgs e)
     {
+        // Mark handled so the drop is not delivered again as it bubbles to the
+        // window (the empty-state zone, the add-more bar and the window all
+        // subscribe), which would run the scan twice and clobber the status.
+        e.Handled = true;
+
         if (DataContext is not MainViewModel viewModel ||
             !e.Data.GetDataPresent(DataFormats.FileDrop))
         {
