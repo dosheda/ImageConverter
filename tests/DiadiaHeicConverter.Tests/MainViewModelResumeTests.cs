@@ -26,7 +26,8 @@ public sealed class MainViewModelResumeTests
                 LanguageCode = "zh-Hans"
             }),
             new NullDialogService(),
-            new LocalizationService());
+            new LocalizationService(),
+            new ThemeService());
 
         viewModel.Items.Add(new ConversionItemViewModel(new ConversionTaskItem
         {
@@ -65,7 +66,8 @@ public sealed class MainViewModelResumeTests
                 LanguageCode = "zh-Hans"
             }),
             new NullDialogService(),
-            new LocalizationService());
+            new LocalizationService(),
+            new ThemeService());
 
         viewModel.Items.Add(new ConversionItemViewModel(new ConversionTaskItem
         {
@@ -97,7 +99,8 @@ public sealed class MainViewModelResumeTests
                 LanguageCode = "zh-Hans"
             }),
             new NullDialogService(),
-            new LocalizationService());
+            new LocalizationService(),
+            new ThemeService());
 
         viewModel.Items.Add(new ConversionItemViewModel(new ConversionTaskItem
         {
@@ -126,7 +129,8 @@ public sealed class MainViewModelResumeTests
                 LanguageCode = "zh-Hans"
             }),
             new NullDialogService(),
-            new LocalizationService());
+            new LocalizationService(),
+            new ThemeService());
 
         var formats = viewModel.OutputFormatOptions.Select(option => option.Value).ToList();
 
@@ -149,7 +153,8 @@ public sealed class MainViewModelResumeTests
                 LanguageCode = "zh-Hans"
             }),
             new NullDialogService(),
-            new LocalizationService());
+            new LocalizationService(),
+            new ThemeService());
 
         await viewModel.AddPathsAsync([temp.Path]);
 

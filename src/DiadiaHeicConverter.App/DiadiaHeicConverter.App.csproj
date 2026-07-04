@@ -9,7 +9,12 @@
     <PlatformTarget>x64</PlatformTarget>
     <AssemblyName>DiadiaImageConverter</AssemblyName>
     <Product>Diadia Image Converter</Product>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />

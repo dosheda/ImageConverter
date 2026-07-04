@@ -6,11 +6,15 @@
         xmlns:conv="clr-namespace:DiadiaHeicConverter.App.Converters"
         mc:Ignorable="d"
         Title="{DynamicResource AppTitle}"
-        Width="1180"
-        Height="760"
-        MinWidth="980"
-        MinHeight="640"
+        Icon="/Resources/app.ico"
+        Width="1200"
+        Height="800"
+        MinWidth="1000"
+        MinHeight="660"
         Background="{DynamicResource WindowBackgroundBrush}"
+        FontFamily="Segoe UI"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Ideal"
         AllowDrop="True"
         DragOver="OnDragOver"
         Drop="OnDrop">
@@ -19,64 +23,88 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Window.Resources>
 
-    <Grid Margin="18">
+    <Grid Margin="24,20,24,22">
         <Grid.RowDefinitions>
-            <RowDefinition Height="132" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0"
-                Background="{DynamicResource DropZoneBackgroundBrush}"
-                BorderBrush="{DynamicResource AccentBrush}"
-                BorderThickness="1.5"
-                CornerRadius="8"
-                Padding="22"
-                AllowDrop="True"
-                DragOver="OnDragOver"
-                Drop="OnDrop">
-            <Grid>
+        <!-- ============ Header / brand ============ -->
+        <Grid Grid.Row="0" Margin="2,0,2,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="40" Height="40" CornerRadius="11"
+                        Background="{DynamicResource AccentBrush}" Margin="0,0,14,0">
+                    <TextBlock Text="◆" FontSize="18" FontWeight="Bold"
+                               Foreground="{DynamicResource AccentForegroundBrush}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource AppTitle}" FontSize="19" FontWeight="SemiBold" />
+                    <TextBlock Text="{DynamicResource DropSubtitle}" FontSize="12"
+                               Margin="0,2,0,0" Foreground="{DynamicResource MutedTextBrush}" />
+                </StackPanel>
+            </StackPanel>
+
+            <Button Grid.Column="1" Style="{StaticResource IconButton}"
+                    Content="{Binding ThemeToggleGlyph}"
+                    Command="{Binding ToggleThemeCommand}"
+                    VerticalAlignment="Center"
+                    ToolTip="Light / Dark" />
+        </Grid>
+
+        <!-- ============ Drop zone ============ -->
+        <Grid Grid.Row="1" Margin="0,0,0,16" MinHeight="140"
+              Background="Transparent"
+              AllowDrop="True" DragOver="OnDragOver" Drop="OnDrop">
+            <Rectangle RadiusX="16" RadiusY="16"
+                       Fill="{DynamicResource DropZoneBackgroundBrush}"
+                       Stroke="{DynamicResource DropZoneBorderBrush}"
+                       StrokeThickness="1.6" StrokeDashArray="6 4" />
+            <Grid Margin="26,22">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="{DynamicResource DropTitle}"
-                               FontSize="24"
-                               FontWeight="SemiBold" />
-                    <TextBlock Text="{DynamicResource DropSubtitle}"
-                               Margin="0,8,0,0"
-                               FontSize="14"
-                               Foreground="{DynamicResource MutedTextBrush}" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="56" Height="56" CornerRadius="15"
+                            Background="{DynamicResource AccentSoftBrush}" Margin="0,0,20,0">
+                        <TextBlock Text="🖼" FontSize="27"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource DropTitle}" FontSize="20" FontWeight="SemiBold" />
+                        <TextBlock Text="{DynamicResource DropSubtitle}"
+                                   Margin="0,7,0,0" FontSize="13"
+                                   Foreground="{DynamicResource MutedTextBrush}" />
+                    </StackPanel>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Center">
-                    <Button Content="{DynamicResource StartButtonText}"
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource PrimaryButton}"
+                            Content="{DynamicResource StartButtonText}"
                             Command="{Binding StartConversionCommand}"
-                            Margin="0,0,10,0"
-                            MinWidth="112" />
+                            Margin="0,0,10,0" MinWidth="118" />
                     <Button Content="{DynamicResource CancelButtonText}"
                             Command="{Binding CancelConversionCommand}"
-                            Margin="0,0,10,0"
-                            MinWidth="84" />
+                            Margin="0,0,10,0" MinWidth="88" />
                     <Button Content="{DynamicResource ClearButtonText}"
                             Command="{Binding ClearListCommand}"
                             MinWidth="96" />
                 </StackPanel>
             </Grid>
-        </Border>
+        </Grid>
 
-        <Border Grid.Row="1"
-                Margin="0,14,0,14"
-                Padding="16"
-                Background="{DynamicResource PanelBackgroundBrush}"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="1"
-                CornerRadius="8">
+        <!-- ============ Settings ============ -->
+        <Border Grid.Row="2" Style="{StaticResource Card}" Padding="20,18" Margin="0,0,0,16">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -89,175 +117,122 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" MinWidth="260" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="230" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0"
-                           Grid.Column="0"
+                <TextBlock Grid.Row="0" Grid.Column="0"
                            Text="{DynamicResource OutputDirectoryLabel}"
-                           VerticalAlignment="Center"
-                           Margin="0,0,10,0" />
-                <TextBox Grid.Row="0"
-                         Grid.Column="1"
-                         Grid.ColumnSpan="2"
+                           VerticalAlignment="Center" Margin="0,0,12,0" />
+                <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                          Text="{Binding OutputDirectory, UpdateSourceTrigger=PropertyChanged}"
-                         Margin="0,0,10,0" />
-                <Button Grid.Row="0"
-                        Grid.Column="3"
+                         Margin="0,0,12,0" />
+                <Button Grid.Row="0" Grid.Column="3"
                         Content="{DynamicResource BrowseButtonText}"
                         Command="{Binding BrowseOutputDirectoryCommand}"
                         MinWidth="74" />
 
-                <TextBlock Grid.Row="1"
-                           Grid.Column="0"
+                <TextBlock Grid.Row="1" Grid.Column="0"
                            Text="{DynamicResource JpegQualityLabel}"
-                           VerticalAlignment="Center"
-                           TextWrapping="Wrap"
-                           MaxWidth="170"
-                           Margin="0,12,10,0" />
-                <Grid Grid.Row="1"
-                      Grid.Column="1"
-                      Margin="0,12,16,0">
+                           VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="170"
+                           Margin="0,14,12,0" />
+                <Grid Grid.Row="1" Grid.Column="1" Margin="0,14,18,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="42" />
+                        <ColumnDefinition Width="44" />
                     </Grid.ColumnDefinitions>
-                    <Slider Minimum="1"
-                            Maximum="100"
-                            TickFrequency="1"
-                            IsSnapToTickEnabled="True"
+                    <Slider Minimum="1" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True"
                             Value="{Binding JpegQuality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="1"
-                               Text="{Binding JpegQuality}"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="{Binding JpegQuality}"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                               FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}" />
                 </Grid>
 
-                <TextBlock Grid.Row="1"
-                           Grid.Column="2"
+                <TextBlock Grid.Row="1" Grid.Column="2"
                            Text="{DynamicResource OutputFormatLabel}"
-                           VerticalAlignment="Center"
-                           TextWrapping="Wrap"
-                           MaxWidth="160"
-                           Margin="0,12,10,0" />
-                <ComboBox Grid.Row="1"
-                          Grid.Column="3"
-                          Margin="0,12,0,0"
+                           VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160"
+                           Margin="0,14,12,0" />
+                <ComboBox Grid.Row="1" Grid.Column="3" Margin="0,14,0,0"
                           ItemsSource="{Binding OutputFormatOptions}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedValuePath="Value"
+                          DisplayMemberPath="DisplayName" SelectedValuePath="Value"
                           SelectedValue="{Binding SelectedOutputFormat, Mode=TwoWay}" />
 
-                <TextBlock Grid.Row="2"
-                           Grid.Column="0"
+                <TextBlock Grid.Row="2" Grid.Column="0"
                            Text="{DynamicResource NamingRuleLabel}"
-                           VerticalAlignment="Center"
-                           TextWrapping="Wrap"
-                           MaxWidth="170"
-                           Margin="0,12,10,0" />
-                <ComboBox Grid.Row="2"
-                          Grid.Column="1"
-                          Margin="0,12,16,0"
+                           VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="170"
+                           Margin="0,14,12,0" />
+                <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,14,18,0"
                           ItemsSource="{Binding NamingRuleOptions}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedValuePath="Value"
+                          DisplayMemberPath="DisplayName" SelectedValuePath="Value"
                           SelectedValue="{Binding SelectedNamingRule, Mode=TwoWay}" />
 
-                <TextBlock Grid.Row="2"
-                           Grid.Column="2"
+                <TextBlock Grid.Row="2" Grid.Column="2"
                            Text="{DynamicResource LanguageLabel}"
-                           VerticalAlignment="Center"
-                           TextWrapping="Wrap"
-                           MaxWidth="160"
-                           Margin="0,12,10,0" />
-                <ComboBox Grid.Row="2"
-                          Grid.Column="3"
-                          Margin="0,12,0,0"
+                           VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160"
+                           Margin="0,14,12,0" />
+                <ComboBox Grid.Row="2" Grid.Column="3" Margin="0,14,0,0"
                           ItemsSource="{Binding LanguageOptions}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedValuePath="Code"
+                          DisplayMemberPath="DisplayName" SelectedValuePath="Code"
                           SelectedValue="{Binding SelectedLanguageCode, Mode=TwoWay}" />
 
-                <WrapPanel Grid.Row="3"
-                           Grid.Column="0"
-                           Grid.ColumnSpan="4"
-                           Margin="0,10,0,0">
-                    <CheckBox Content="{DynamicResource PreserveExifText}"
-                              IsChecked="{Binding PreserveExif}" />
-                    <CheckBox Content="{DynamicResource PreserveGpsText}"
-                              IsChecked="{Binding PreserveGps}" />
-                    <CheckBox Content="{DynamicResource PreserveDirectoryText}"
-                              IsChecked="{Binding PreserveDirectoryStructure}" />
-                    <CheckBox Content="{DynamicResource OverwriteText}"
-                              IsChecked="{Binding OverwriteExistingFiles}" />
+                <WrapPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Margin="0,16,0,0">
+                    <CheckBox Content="{DynamicResource PreserveExifText}" IsChecked="{Binding PreserveExif}" />
+                    <CheckBox Content="{DynamicResource PreserveGpsText}" IsChecked="{Binding PreserveGps}" />
+                    <CheckBox Content="{DynamicResource PreserveDirectoryText}" IsChecked="{Binding PreserveDirectoryStructure}" />
+                    <CheckBox Content="{DynamicResource OverwriteText}" IsChecked="{Binding OverwriteExistingFiles}" />
                 </WrapPanel>
 
-                <StackPanel Grid.Row="4"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="4"
-                            Margin="0,12,0,0">
-                    <TextBlock Text="{DynamicResource PrivacyHint}"
+                <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Margin="0,12,0,0">
+                    <TextBlock Text="{DynamicResource PrivacyHint}" FontSize="12"
                                Foreground="{DynamicResource MutedTextBrush}" />
-                    <TextBlock Text="{DynamicResource SameFormatHint}"
-                               Margin="0,4,0,0"
-                               Foreground="{DynamicResource MutedTextBrush}" />
+                    <TextBlock Text="{DynamicResource SameFormatHint}" FontSize="12"
+                               Margin="0,4,0,0" Foreground="{DynamicResource MutedTextBrush}" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <DataGrid Grid.Row="2"
-                  ItemsSource="{Binding Items}"
-                  EnableRowVirtualization="True"
-                  EnableColumnVirtualization="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding SourcePath}"
-                                    Width="2.1*">
-                    <DataGridTextColumn.Header>
-                        <TextBlock Text="{DynamicResource ColumnSource}" />
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding OutputPath}"
-                                    Width="2.1*">
-                    <DataGridTextColumn.Header>
-                        <TextBlock Text="{DynamicResource ColumnOutput}" />
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding FileSizeDisplay}"
-                                    Width="90">
-                    <DataGridTextColumn.Header>
-                        <TextBlock Text="{DynamicResource ColumnSize}" />
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding StatusText}"
-                                    Width="96">
-                    <DataGridTextColumn.Header>
-                        <TextBlock Text="{DynamicResource ColumnStatus}" />
-                    </DataGridTextColumn.Header>
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Foreground"
-                                    Value="{Binding Status, Converter={StaticResource StatusToBrushConverter}}" />
-                            <Setter Property="FontWeight" Value="SemiBold" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding FailureReason}"
-                                    Width="1.4*">
-                    <DataGridTextColumn.Header>
-                        <TextBlock Text="{DynamicResource ColumnReason}" />
-                    </DataGridTextColumn.Header>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <!-- ============ File list ============ -->
+        <Border Grid.Row="3" Style="{StaticResource Card}" Padding="0" ClipToBounds="True">
+            <DataGrid ItemsSource="{Binding Items}" Background="Transparent" Margin="1">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding SourcePath}" Width="2.1*">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="{DynamicResource ColumnSource}" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding OutputPath}" Width="2.1*">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="{DynamicResource ColumnOutput}" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding FileSizeDisplay}" Width="90">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="{DynamicResource ColumnSize}" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding StatusText}" Width="100">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="{DynamicResource ColumnStatus}" />
+                        </DataGridTextColumn.Header>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground"
+                                        Value="{Binding Status, Converter={StaticResource StatusToBrushConverter}}" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding FailureReason}" Width="1.4*">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="{DynamicResource ColumnReason}" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
 
-        <Border Grid.Row="3"
-                Margin="0,14,0,0"
-                Padding="14"
-                Background="{DynamicResource PanelBackgroundBrush}"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="1"
-                CornerRadius="8">
+        <!-- ============ Status / progress ============ -->
+        <Border Grid.Row="4" Style="{StaticResource Card}" Padding="18,15" Margin="0,16,0,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -268,45 +243,39 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{Binding CurrentMessage}"
-                           Foreground="{DynamicResource MutedTextBrush}" />
-                <StackPanel Grid.Column="1"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Right">
-                    <TextBlock Margin="0,0,18,0">
+                <TextBlock Text="{Binding CurrentMessage}" VerticalAlignment="Center"
+                           Foreground="{DynamicResource MutedTextBrush}" TextTrimming="CharacterEllipsis" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Margin="0,0,20,0" Foreground="{DynamicResource MutedTextBrush}">
                         <Run Text="{DynamicResource SummaryTotal}" />
                         <Run Text=" " />
-                        <Run Text="{Binding TotalCount, Mode=OneWay}" />
+                        <Run Text="{Binding TotalCount, Mode=OneWay}" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" />
                     </TextBlock>
-                    <TextBlock Margin="0,0,18,0">
+                    <TextBlock Margin="0,0,20,0" Foreground="{DynamicResource MutedTextBrush}">
                         <Run Text="{DynamicResource SummarySuccess}" />
                         <Run Text=" " />
-                        <Run Text="{Binding SucceededCount, Mode=OneWay}" />
+                        <Run Text="{Binding SucceededCount, Mode=OneWay}" FontWeight="SemiBold" Foreground="#16A34A" />
                     </TextBlock>
-                    <TextBlock Margin="0,0,18,0">
+                    <TextBlock Margin="0,0,20,0" Foreground="{DynamicResource MutedTextBrush}">
                         <Run Text="{DynamicResource SummaryFailed}" />
                         <Run Text=" " />
-                        <Run Text="{Binding FailedCount, Mode=OneWay}" />
+                        <Run Text="{Binding FailedCount, Mode=OneWay}" FontWeight="SemiBold" Foreground="#DC2626" />
                     </TextBlock>
-                    <TextBlock>
+                    <TextBlock Foreground="{DynamicResource MutedTextBrush}">
                         <Run Text="{DynamicResource SummarySkipped}" />
                         <Run Text=" " />
-                        <Run Text="{Binding SkippedCount, Mode=OneWay}" />
+                        <Run Text="{Binding SkippedCount, Mode=OneWay}" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" />
                     </TextBlock>
                 </StackPanel>
 
-                <ProgressBar Grid.Row="1"
-                             Minimum="0"
+                <ProgressBar Grid.Row="1" Minimum="0"
                              Maximum="{Binding ProgressMaximum, Mode=OneWay}"
                              Value="{Binding ProgressValue, Mode=OneWay}"
-                             Height="12"
-                             Margin="0,12,116,0" />
-                <Button Grid.Row="1"
-                        Grid.Column="1"
+                             Height="8" Margin="0,14,140,0" VerticalAlignment="Center" />
+                <Button Grid.Row="1" Grid.Column="1"
                         Content="{DynamicResource OpenOutputButtonText}"
                         Command="{Binding OpenOutputDirectoryCommand}"
-                        MinWidth="132"
-                        Margin="12,8,0,0" />
+                        MinWidth="132" Margin="12,10,0,0" />
             </Grid>
         </Border>
     </Grid>

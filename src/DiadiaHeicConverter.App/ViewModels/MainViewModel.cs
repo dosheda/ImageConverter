@@ -16,9 +16,11 @@ public sealed class MainViewModel : ObservableObject
     private readonly ISettingsService _settingsService;
     private readonly IDialogService _dialogService;
     private readonly ILocalizationService _localizationService;
+    private readonly IThemeService _themeService;
     private CancellationTokenSource? _conversionCancellation;
     private string _outputDirectory;
     private string _selectedLanguageCode;
+    private string _theme;
     private int _jpegQuality;
     private OutputFormat _selectedOutputFormat;
     private NamingRule _selectedNamingRule;
@@ -37,7 +39,8 @@ public sealed class MainViewModel : ObservableObject
         IOutputPathService outputPathService,
         ISettingsService settingsService,
         IDialogService dialogService,
-        ILocalizationService localizationService)
+        ILocalizationService localizationService,
+        IThemeService themeService)
     {
         _fileScannerService = fileScannerService;
         _imageConvertService = imageConvertService;
@@ -45,10 +48,13 @@ public sealed class MainViewModel : ObservableObject
         _settingsService = settingsService;
         _dialogService = dialogService;
         _localizationService = localizationService;
+        _themeService = themeService;
 
         var settings = settingsService.Load();
         _selectedLanguageCode = localizationService.NormalizeLanguageCode(settings.LanguageCode);
         _localizationService.ApplyLanguage(_selectedLanguageCode);
+        _theme = themeService.NormalizeTheme(settings.Theme);
+        _themeService.ApplyTheme(_theme);
         _outputDirectory = settings.OutputDirectory;
         _jpegQuality = settings.JpegQuality;
         _selectedOutputFormat = settings.OutputFormat;
@@ -63,6 +69,7 @@ public sealed class MainViewModel : ObservableObject
         ClearListCommand = new RelayCommand(ClearList, () => !IsConverting && Items.Count > 0);
         BrowseOutputDirectoryCommand = new RelayCommand(BrowseOutputDirectory, () => !IsConverting);
         OpenOutputDirectoryCommand = new RelayCommand(OpenOutputDirectory, () => !string.IsNullOrWhiteSpace(OutputDirectory));
+        ToggleThemeCommand = new RelayCommand(ToggleTheme);
 
         LanguageOptions = localizationService.SupportedLanguages;
         RefreshNamingRuleOptions();
@@ -87,6 +94,12 @@ public sealed class MainViewModel : ObservableObject
     public IRelayCommand BrowseOutputDirectoryCommand { get; }
 
     public IRelayCommand OpenOutputDirectoryCommand { get; }
+
+    public IRelayCommand ToggleThemeCommand { get; }
+
+    public bool IsDarkTheme => string.Equals(_theme, "Dark", StringComparison.OrdinalIgnoreCase);
+
+    public string ThemeToggleGlyph => IsDarkTheme ? "☀" : "☽";
 
     public string OutputDirectory
     {
@@ -363,6 +376,15 @@ public sealed class MainViewModel : ObservableObject
         RefreshCommandStates();
     }
 
+    private void ToggleTheme()
+    {
+        _theme = IsDarkTheme ? "Light" : "Dark";
+        _themeService.ApplyTheme(_theme);
+        OnPropertyChanged(nameof(IsDarkTheme));
+        OnPropertyChanged(nameof(ThemeToggleGlyph));
+        PersistSettings();
+    }
+
     private void BrowseOutputDirectory()
     {
         var selected = _dialogService.SelectFolder(OutputDirectory);
@@ -451,6 +473,7 @@ public sealed class MainViewModel : ObservableObject
             PreserveGps = PreserveGps,
             PreserveDirectoryStructure = PreserveDirectoryStructure,
             OverwriteExistingFiles = OverwriteExistingFiles,
+            Theme = _theme,
             LanguageCode = SelectedLanguageCode
         }.Normalized();
     }

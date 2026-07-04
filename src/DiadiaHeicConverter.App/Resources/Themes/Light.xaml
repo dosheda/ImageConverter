@@ -1,18 +1,106 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Color x:Key="WindowBackgroundColor">#F6F7F9</Color>
-    <Color x:Key="PanelBackgroundColor">#FFFFFFFF</Color>
+    <!-- ============================================================
+         Diadia Image Converter · Light theme
+         A calm, modern surface palette with an indigo accent.
+         Every key here has a matching key in Dark.xaml so the two
+         dictionaries can be swapped at runtime.
+         ============================================================ -->
+
+    <!-- Surfaces -->
+    <Color x:Key="WindowBackgroundColor">#F3F4F7</Color>
+    <Color x:Key="PanelBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="ElevatedBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="SubtleBackgroundColor">#F9FAFB</Color>
+
+    <!-- Text -->
     <Color x:Key="TextColor">#111827</Color>
     <Color x:Key="MutedTextColor">#6B7280</Color>
-    <Color x:Key="BorderColor">#D7DCE3</Color>
-    <Color x:Key="AccentColor">#2563EB</Color>
-    <Color x:Key="DropZoneBackgroundColor">#EDF4FF</Color>
+    <Color x:Key="SubtleTextColor">#9CA3AF</Color>
 
+    <!-- Lines -->
+    <Color x:Key="BorderColor">#E5E7EB</Color>
+    <Color x:Key="DividerColor">#EEF0F3</Color>
+
+    <!-- Accent (indigo) -->
+    <Color x:Key="AccentColor">#4F46E5</Color>
+    <Color x:Key="AccentHoverColor">#4338CA</Color>
+    <Color x:Key="AccentPressedColor">#3730A3</Color>
+    <Color x:Key="AccentSoftColor">#EEF2FF</Color>
+    <Color x:Key="AccentForegroundColor">#FFFFFF</Color>
+
+    <!-- Drop zone -->
+    <Color x:Key="DropZoneBackgroundColor">#EEF2FF</Color>
+    <Color x:Key="DropZoneBorderColor">#C7D2FE</Color>
+
+    <!-- Inputs -->
+    <Color x:Key="InputBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="InputBorderColor">#D1D5DB</Color>
+    <Color x:Key="InputHoverBorderColor">#9CA3AF</Color>
+
+    <!-- Secondary button -->
+    <Color x:Key="ButtonBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="ButtonHoverBackgroundColor">#F9FAFB</Color>
+    <Color x:Key="ButtonPressedBackgroundColor">#F3F4F6</Color>
+    <Color x:Key="ButtonBorderColor">#D1D5DB</Color>
+    <Color x:Key="ButtonForegroundColor">#374151</Color>
+    <Color x:Key="DisabledBackgroundColor">#F3F4F6</Color>
+    <Color x:Key="DisabledForegroundColor">#B6BCC6</Color>
+
+    <!-- Data grid -->
+    <Color x:Key="GridHeaderBackgroundColor">#F9FAFB</Color>
+    <Color x:Key="GridRowHoverColor">#F5F3FF</Color>
+    <Color x:Key="GridRowSelectedColor">#EEF2FF</Color>
+
+    <!-- Track controls -->
+    <Color x:Key="TrackColor">#E5E7EB</Color>
+    <Color x:Key="ThumbColor">#FFFFFF</Color>
+    <Color x:Key="ScrollThumbColor">#CBD5E1</Color>
+    <Color x:Key="ScrollThumbHoverColor">#94A3B8</Color>
+
+    <!-- Shadow -->
+    <Color x:Key="ShadowColor">#1F2937</Color>
+
+    <!-- ================= Brushes ================= -->
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource WindowBackgroundColor}" />
     <SolidColorBrush x:Key="PanelBackgroundBrush" Color="{StaticResource PanelBackgroundColor}" />
+    <SolidColorBrush x:Key="ElevatedBackgroundBrush" Color="{StaticResource ElevatedBackgroundColor}" />
+    <SolidColorBrush x:Key="SubtleBackgroundBrush" Color="{StaticResource SubtleBackgroundColor}" />
+
     <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
     <SolidColorBrush x:Key="MutedTextBrush" Color="{StaticResource MutedTextColor}" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="{StaticResource SubtleTextColor}" />
+
     <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="DividerBrush" Color="{StaticResource DividerColor}" />
+
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="{StaticResource AccentHoverColor}" />
+    <SolidColorBrush x:Key="AccentPressedBrush" Color="{StaticResource AccentPressedColor}" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}" />
+    <SolidColorBrush x:Key="AccentForegroundBrush" Color="{StaticResource AccentForegroundColor}" />
+
     <SolidColorBrush x:Key="DropZoneBackgroundBrush" Color="{StaticResource DropZoneBackgroundColor}" />
+    <SolidColorBrush x:Key="DropZoneBorderBrush" Color="{StaticResource DropZoneBorderColor}" />
+
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="{StaticResource InputBackgroundColor}" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="{StaticResource InputBorderColor}" />
+    <SolidColorBrush x:Key="InputHoverBorderBrush" Color="{StaticResource InputHoverBorderColor}" />
+
+    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{StaticResource ButtonBackgroundColor}" />
+    <SolidColorBrush x:Key="ButtonHoverBackgroundBrush" Color="{StaticResource ButtonHoverBackgroundColor}" />
+    <SolidColorBrush x:Key="ButtonPressedBackgroundBrush" Color="{StaticResource ButtonPressedBackgroundColor}" />
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource ButtonBorderColor}" />
+    <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{StaticResource ButtonForegroundColor}" />
+    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="{StaticResource DisabledBackgroundColor}" />
+    <SolidColorBrush x:Key="DisabledForegroundBrush" Color="{StaticResource DisabledForegroundColor}" />
+
+    <SolidColorBrush x:Key="GridHeaderBackgroundBrush" Color="{StaticResource GridHeaderBackgroundColor}" />
+    <SolidColorBrush x:Key="GridRowHoverBrush" Color="{StaticResource GridRowHoverColor}" />
+    <SolidColorBrush x:Key="GridRowSelectedBrush" Color="{StaticResource GridRowSelectedColor}" />
+
+    <SolidColorBrush x:Key="TrackBrush" Color="{StaticResource TrackColor}" />
+    <SolidColorBrush x:Key="ThumbBrush" Color="{StaticResource ThumbColor}" />
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="{StaticResource ScrollThumbColor}" />
+    <SolidColorBrush x:Key="ScrollThumbHoverBrush" Color="{StaticResource ScrollThumbHoverColor}" />
 </ResourceDictionary>
