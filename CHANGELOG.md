@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.4.1] — 2026-07-05
+### 新增 / Added
+- 补全其余 11 种界面语言的翻译（de/es/fr/it/ja/ko/pl/pt-BR/ru/tr/cs），此前 v0.3/v0.4 新增文案在这些语言下仍为英文占位。
+
+### 变更 / Changed
+- 更新 README 截图为最新界面。
+
 ## [0.4.0] — 2026-07-04
 ### 修复 / Fixed
 - 修复**添加文件即闪退**的严重问题:文件行模板中两处只读属性(文件大小)被 `Run` 默认的 TwoWay 绑定劫持，导致模板实例化时抛出未捕获异常。
@@ -68,7 +75,8 @@
 - 取消后续跑、安全写入（先临时文件后移动）、绝不删除或覆盖原图。
 - 14 种界面语言；设置持久化；转换日志。
 
-[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/dosheda/ImageConverter/releases/tag/v0.4.1
 [0.4.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.4.0
 [0.3.2]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.2
 [0.3.1]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.1
