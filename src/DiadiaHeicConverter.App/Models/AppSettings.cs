@@ -34,7 +34,7 @@ public sealed class AppSettings
             PreserveGps = PreserveGps,
             PreserveDirectoryStructure = PreserveDirectoryStructure,
             OverwriteExistingFiles = OverwriteExistingFiles,
-            Theme = string.IsNullOrWhiteSpace(Theme) ? "Light" : Theme,
+            Theme = NormalizeTheme(Theme),
             LanguageCode = string.IsNullOrWhiteSpace(LanguageCode) ? "zh-Hans" : LanguageCode
         };
     }
@@ -48,5 +48,20 @@ public sealed class AppSettings
         }
 
         return Path.Combine(pictures, "Diadia Image Converter Output");
+    }
+
+    private static string NormalizeTheme(string? theme)
+    {
+        if (string.Equals(theme, "Dark", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Dark";
+        }
+
+        if (string.Equals(theme, "System", StringComparison.OrdinalIgnoreCase))
+        {
+            return "System";
+        }
+
+        return "Light";
     }
 }

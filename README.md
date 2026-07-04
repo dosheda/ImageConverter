@@ -37,7 +37,7 @@ photos are never deleted and never overwritten**.
   Duplicate names get `_1`, `_2`… suffixes instead of overwriting (unless you opt in).
 - **Resumable:** cancel mid-run and press Start again — already-converted files are skipped.
 - **Non-blocking UI:** conversion runs in the background; the window never freezes.
-- **Light / Dark themes** with a one-click toggle, remembered between sessions.
+- **Light / Dark / System themes** from the right-side Inspector, remembered between sessions.
 - **14 UI languages:** 简体中文 · 繁體中文 · English · Čeština · Deutsch · Español ·
   Français · Italiano · 日本語 · 한국어 · Polski · Português (Brasil) · Русский · Türkçe.
 - Three **naming rules:**
@@ -70,8 +70,8 @@ dotnet publish .\src\DiadiaHeicConverter.App\DiadiaHeicConverter.App.csproj `
 1. Launch Diadia Image Converter.
 2. Drag image files or a folder onto the drop zone.
 3. Choose an output directory.
-4. Adjust output format, JPG/WebP quality, naming rule, EXIF/GPS, folder structure and overwrite as needed.
-5. (Optional) Switch UI language, or toggle the light/dark theme (top-right).
+4. Adjust output format, JPG/WebP quality, naming rule, output location, EXIF/GPS, folder structure and overwrite in the right-side Inspector.
+5. (Optional) Switch UI language, or choose Light / Dark / System theme in the Inspector.
 6. Click **Start**.
 7. When finished, click **Open output folder**.
 
@@ -129,7 +129,7 @@ JPG、PNG、WebP、BMP、TIFF、HEIC/HEIF 之间互转。核心原则：**绝不
 - 支持保留 EXIF，**默认剥离 GPS 位置信息**。
 - 先写临时文件再移动到最终路径；重名自动加 `_1`、`_2` 后缀，默认不覆盖。
 - 取消后再次开始会**续跑**，已成功的文件不重复转换；转换在后台执行，界面不卡死。
-- **亮 / 暗主题**一键切换并记忆；**14 种界面语言**。
+- **浅色 / 深色 / 跟随系统主题**在右侧 Inspector 中集中设置并记忆；**14 种界面语言**。
 
 **运行**
 

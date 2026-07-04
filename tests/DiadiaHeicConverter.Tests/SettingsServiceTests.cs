@@ -5,6 +5,21 @@ namespace DiadiaHeicConverter.Tests;
 
 public sealed class SettingsServiceTests
 {
+    [Theory]
+    [InlineData("System", "System")]
+    [InlineData("system", "System")]
+    [InlineData("Dark", "Dark")]
+    [InlineData("missing", "Light")]
+    public void AppSettings_normalizes_theme_values(string theme, string expected)
+    {
+        var settings = new AppSettings
+        {
+            Theme = theme
+        };
+
+        Assert.Equal(expected, settings.Normalized().Theme);
+    }
+
     [Fact]
     public void Save_and_load_round_trips_settings()
     {

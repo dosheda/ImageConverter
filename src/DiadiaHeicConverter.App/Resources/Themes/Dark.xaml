@@ -51,6 +51,14 @@
     <Color x:Key="GridRowHoverColor">#273449</Color>
     <Color x:Key="GridRowSelectedColor">#312E81</Color>
 
+    <!-- Semantic status colors -->
+    <Color x:Key="SuccessColor">#4ADE80</Color>
+    <Color x:Key="SuccessSoftColor">#12351F</Color>
+    <Color x:Key="DangerColor">#F87171</Color>
+    <Color x:Key="DangerSoftColor">#3A1B1B</Color>
+    <Color x:Key="SaveColor">#2DD4BF</Color>
+    <Color x:Key="SaveSoftColor">#0C3330</Color>
+
     <!-- Track controls -->
     <Color x:Key="TrackColor">#334155</Color>
     <Color x:Key="ThumbColor">#E2E8F0</Color>
@@ -97,6 +105,13 @@
     <SolidColorBrush x:Key="GridHeaderBackgroundBrush" Color="{StaticResource GridHeaderBackgroundColor}" />
     <SolidColorBrush x:Key="GridRowHoverBrush" Color="{StaticResource GridRowHoverColor}" />
     <SolidColorBrush x:Key="GridRowSelectedBrush" Color="{StaticResource GridRowSelectedColor}" />
+
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+    <SolidColorBrush x:Key="SuccessSoftBrush" Color="{StaticResource SuccessSoftColor}" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
+    <SolidColorBrush x:Key="DangerSoftBrush" Color="{StaticResource DangerSoftColor}" />
+    <SolidColorBrush x:Key="SaveBrush" Color="{StaticResource SaveColor}" />
+    <SolidColorBrush x:Key="SaveSoftBrush" Color="{StaticResource SaveSoftColor}" />
 
     <SolidColorBrush x:Key="TrackBrush" Color="{StaticResource TrackColor}" />
     <SolidColorBrush x:Key="ThumbBrush" Color="{StaticResource ThumbColor}" />

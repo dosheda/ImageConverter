@@ -140,6 +140,30 @@ public sealed class MainViewModelResumeTests
     }
 
     [Fact]
+    public void SelectedTheme_persists_system_theme()
+    {
+        using var temp = new TestTempDirectory();
+        var settingsService = new TestSettingsService(new AppSettings
+        {
+            OutputDirectory = temp.Combine("out"),
+            LanguageCode = "zh-Hans"
+        });
+        var viewModel = new MainViewModel(
+            new EmptyFileScannerService(),
+            new RecordingConvertService(),
+            new OutputPathService(new NamingService()),
+            settingsService,
+            new NullDialogService(),
+            new LocalizationService(),
+            new ThemeService());
+
+        viewModel.SelectedTheme = "System";
+
+        Assert.True(viewModel.IsSystem);
+        Assert.Equal("System", settingsService.SavedSettings?.Theme);
+    }
+
+    [Fact]
     public async Task AddPathsAsync_reports_ignored_unsupported_files()
     {
         using var temp = new TestTempDirectory();
@@ -204,10 +228,13 @@ public sealed class MainViewModelResumeTests
 
     private sealed class TestSettingsService(AppSettings settings) : ISettingsService
     {
+        public AppSettings? SavedSettings { get; private set; }
+
         public AppSettings Load() => settings;
 
         public void Save(AppSettings newSettings)
         {
+            SavedSettings = newSettings;
         }
     }
 

@@ -1,4 +1,5 @@
 using System.Windows;
+using Microsoft.Win32;
 
 namespace DiadiaHeicConverter.App.Services;
 
@@ -6,17 +7,49 @@ public sealed class ThemeService : IThemeService
 {
     private const string LightTheme = "Light";
     private const string DarkTheme = "Dark";
+    private const string SystemTheme = "System";
 
     public string NormalizeTheme(string? theme)
     {
-        return string.Equals(theme, DarkTheme, StringComparison.OrdinalIgnoreCase)
-            ? DarkTheme
-            : LightTheme;
+        if (string.Equals(theme, DarkTheme, StringComparison.OrdinalIgnoreCase))
+        {
+            return DarkTheme;
+        }
+
+        if (string.Equals(theme, SystemTheme, StringComparison.OrdinalIgnoreCase))
+        {
+            return SystemTheme;
+        }
+
+        return LightTheme;
+    }
+
+    public string ResolveEffectiveTheme(string theme)
+    {
+        var normalized = NormalizeTheme(theme);
+        if (!string.Equals(normalized, SystemTheme, StringComparison.OrdinalIgnoreCase))
+        {
+            return normalized;
+        }
+
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            var value = key?.GetValue("AppsUseLightTheme");
+            return value is int appsUseLightTheme && appsUseLightTheme == 0
+                ? DarkTheme
+                : LightTheme;
+        }
+        catch
+        {
+            return LightTheme;
+        }
     }
 
     public void ApplyTheme(string theme)
     {
-        var normalized = NormalizeTheme(theme);
+        var normalized = ResolveEffectiveTheme(theme);
         var app = Application.Current;
         if (app is null)
         {

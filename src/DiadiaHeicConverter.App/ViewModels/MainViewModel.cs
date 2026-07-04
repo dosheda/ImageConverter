@@ -20,7 +20,7 @@ public sealed class MainViewModel : ObservableObject
     private CancellationTokenSource? _conversionCancellation;
     private string _outputDirectory;
     private string _selectedLanguageCode;
-    private string _theme;
+    private string _selectedTheme;
     private int _jpegQuality;
     private OutputFormat _selectedOutputFormat;
     private NamingRule _selectedNamingRule;
@@ -53,8 +53,8 @@ public sealed class MainViewModel : ObservableObject
         var settings = settingsService.Load();
         _selectedLanguageCode = localizationService.NormalizeLanguageCode(settings.LanguageCode);
         _localizationService.ApplyLanguage(_selectedLanguageCode);
-        _theme = themeService.NormalizeTheme(settings.Theme);
-        _themeService.ApplyTheme(_theme);
+        _selectedTheme = themeService.NormalizeTheme(settings.Theme);
+        _themeService.ApplyTheme(_selectedTheme);
         _outputDirectory = settings.OutputDirectory;
         _jpegQuality = settings.JpegQuality;
         _selectedOutputFormat = settings.OutputFormat;
@@ -69,9 +69,12 @@ public sealed class MainViewModel : ObservableObject
         ClearListCommand = new RelayCommand(ClearList, () => !IsConverting && Items.Count > 0);
         BrowseOutputDirectoryCommand = new RelayCommand(BrowseOutputDirectory, () => !IsConverting);
         OpenOutputDirectoryCommand = new RelayCommand(OpenOutputDirectory, () => !string.IsNullOrWhiteSpace(OutputDirectory));
-        ToggleThemeCommand = new RelayCommand(ToggleTheme);
+        OpenGitHubCommand = new RelayCommand(() => OpenExternalLink("https://github.com/dosheda/ImageConverter"));
+        OpenReleasesCommand = new RelayCommand(() => OpenExternalLink("https://github.com/dosheda/ImageConverter/releases"));
+        OpenLicensesCommand = new RelayCommand(() => OpenExternalLink("https://github.com/dosheda/ImageConverter/blob/main/LICENSE"));
 
         LanguageOptions = localizationService.SupportedLanguages;
+        RefreshThemeOptions();
         RefreshNamingRuleOptions();
         RefreshOutputFormatOptions();
         _currentMessage = AppStrings.Get("InitialMessage");
@@ -82,6 +85,8 @@ public sealed class MainViewModel : ObservableObject
     public ObservableCollection<NamingRuleOption> NamingRuleOptions { get; } = [];
 
     public ObservableCollection<OutputFormatOption> OutputFormatOptions { get; } = [];
+
+    public ObservableCollection<ThemeOption> ThemeOptions { get; } = [];
 
     public IReadOnlyList<LanguageOption> LanguageOptions { get; }
 
@@ -95,7 +100,11 @@ public sealed class MainViewModel : ObservableObject
 
     public IRelayCommand OpenOutputDirectoryCommand { get; }
 
-    public IRelayCommand ToggleThemeCommand { get; }
+    public IRelayCommand OpenGitHubCommand { get; }
+
+    public IRelayCommand OpenReleasesCommand { get; }
+
+    public IRelayCommand OpenLicensesCommand { get; }
 
     public string AppVersion
     {
@@ -106,9 +115,26 @@ public sealed class MainViewModel : ObservableObject
         }
     }
 
-    public bool IsDarkTheme => string.Equals(_theme, "Dark", StringComparison.OrdinalIgnoreCase);
+    public string SelectedTheme
+    {
+        get => _selectedTheme;
+        set
+        {
+            var normalized = _themeService.NormalizeTheme(value);
+            if (SetProperty(ref _selectedTheme, normalized))
+            {
+                _themeService.ApplyTheme(normalized);
+                RefreshThemeState();
+                PersistSettings();
+            }
+        }
+    }
 
-    public string ThemeToggleGlyph => IsDarkTheme ? "☀" : "☽";
+    public bool IsLight => string.Equals(SelectedTheme, "Light", StringComparison.OrdinalIgnoreCase);
+
+    public bool IsDark => string.Equals(SelectedTheme, "Dark", StringComparison.OrdinalIgnoreCase);
+
+    public bool IsSystem => string.Equals(SelectedTheme, "System", StringComparison.OrdinalIgnoreCase);
 
     public string OutputDirectory
     {
@@ -265,7 +291,13 @@ public sealed class MainViewModel : ObservableObject
 
     public int FailedCount => Items.Count(item => item.Status == ConversionStatus.Failed);
 
+    public int PendingCount => Items.Count(item => item.Status == ConversionStatus.Pending);
+
     public int SkippedCount => Items.Count(item => item.Status is ConversionStatus.Skipped or ConversionStatus.Cancelled);
+
+    public int RunnableCount => Items.Count(item => IsRunnableStatus(item.Status));
+
+    public string StartButtonText => AppStrings.Format("StartButtonWithCountFmt", RunnableCount);
 
     public bool HasOutputDirectory => !string.IsNullOrWhiteSpace(OutputDirectory);
 
@@ -385,15 +417,6 @@ public sealed class MainViewModel : ObservableObject
         RefreshCommandStates();
     }
 
-    private void ToggleTheme()
-    {
-        _theme = IsDarkTheme ? "Light" : "Dark";
-        _themeService.ApplyTheme(_theme);
-        OnPropertyChanged(nameof(IsDarkTheme));
-        OnPropertyChanged(nameof(ThemeToggleGlyph));
-        PersistSettings();
-    }
-
     private void BrowseOutputDirectory()
     {
         var selected = _dialogService.SelectFolder(OutputDirectory);
@@ -416,6 +439,22 @@ public sealed class MainViewModel : ObservableObject
             Arguments = $"\"{directory}\"",
             UseShellExecute = true
         });
+    }
+
+    private void OpenExternalLink(string url)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+        catch
+        {
+            CurrentMessage = AppStrings.Get("ErrorUnknown");
+        }
     }
 
     private bool CanStartConversion()
@@ -457,7 +496,10 @@ public sealed class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(TotalCount));
         OnPropertyChanged(nameof(SucceededCount));
         OnPropertyChanged(nameof(FailedCount));
+        OnPropertyChanged(nameof(PendingCount));
         OnPropertyChanged(nameof(SkippedCount));
+        OnPropertyChanged(nameof(RunnableCount));
+        OnPropertyChanged(nameof(StartButtonText));
         RefreshCommandStates();
     }
 
@@ -482,7 +524,7 @@ public sealed class MainViewModel : ObservableObject
             PreserveGps = PreserveGps,
             PreserveDirectoryStructure = PreserveDirectoryStructure,
             OverwriteExistingFiles = OverwriteExistingFiles,
-            Theme = _theme,
+            Theme = SelectedTheme,
             LanguageCode = SelectedLanguageCode
         }.Normalized();
     }
@@ -542,6 +584,7 @@ public sealed class MainViewModel : ObservableObject
     {
         RefreshNamingRuleOptions();
         RefreshOutputFormatOptions();
+        RefreshThemeOptions();
         foreach (var item in Items)
         {
             item.RefreshLocalization();
@@ -549,6 +592,24 @@ public sealed class MainViewModel : ObservableObject
 
         CurrentMessage = AppStrings.Get("LanguageChangedMessage");
         RefreshCounts();
+    }
+
+    private void RefreshThemeOptions()
+    {
+        var selectedTheme = _selectedTheme;
+        ThemeOptions.Clear();
+        ThemeOptions.Add(new("Light", AppStrings.Get("ThemeLight")));
+        ThemeOptions.Add(new("Dark", AppStrings.Get("ThemeDark")));
+        ThemeOptions.Add(new("System", AppStrings.Get("ThemeSystem")));
+        _selectedTheme = selectedTheme;
+        OnPropertyChanged(nameof(SelectedTheme));
+    }
+
+    private void RefreshThemeState()
+    {
+        OnPropertyChanged(nameof(IsLight));
+        OnPropertyChanged(nameof(IsDark));
+        OnPropertyChanged(nameof(IsSystem));
     }
 
     private void RefreshNamingRuleOptions()
