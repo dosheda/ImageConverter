@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+## [0.3.2] — 2026-07-04
+### 修复 / Fixed
+- 修正输出格式胶囊与主题分段控件选中态文字被全局 `TextBlock` 样式覆盖的问题，确保选中后文字实际显示为白色。
+
 ## [0.3.1] — 2026-07-04
 ### 新增 / Added
 - 转换成功后记录输出文件大小，文件行显示原大小到新大小和压缩比例。
@@ -47,7 +51,8 @@
 - 取消后续跑、安全写入（先临时文件后移动）、绝不删除或覆盖原图。
 - 14 种界面语言；设置持久化；转换日志。
 
-[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/dosheda/ImageConverter/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.2
 [0.3.1]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.1
 [0.3.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.3.0
 [0.2.0]: https://github.com/dosheda/ImageConverter/releases/tag/v0.2.0
