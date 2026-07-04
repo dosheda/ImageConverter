@@ -31,11 +31,14 @@ photos are never deleted and never overwritten**.
   Unsupported files in a folder are ignored, with a count shown at the bottom.
 - **Outputs:** JPG, PNG, WebP, BMP, TIFF (JPG by default).
 - **Same-format re-encoding** (e.g. WebP → WebP, JPG → JPG) for compression.
+- Per-file and overall **space saved** stats after conversion.
 - Adjustable **JPG/WebP quality**, output directory, naming rule, and folder-structure preservation.
 - **EXIF handling:** keep EXIF metadata, with **GPS stripped by default** for privacy.
 - **Safe writes:** files are written to a temporary path first, then moved into place.
   Duplicate names get `_1`, `_2`… suffixes instead of overwriting (unless you opt in).
 - **Resumable:** cancel mid-run and press Start again — already-converted files are skipped.
+- Open converted images from the file row, double-click a completed row, or use the row context menu to reveal/copy paths.
+- Retry failed rows individually.
 - **Non-blocking UI:** conversion runs in the background; the window never freezes.
 - **Light / Dark / System themes** from the right-side Inspector, remembered between sessions.
 - **14 UI languages:** 简体中文 · 繁體中文 · English · Čeština · Deutsch · Español ·
@@ -73,7 +76,7 @@ dotnet publish .\src\DiadiaHeicConverter.App\DiadiaHeicConverter.App.csproj `
 4. Adjust output format, JPG/WebP quality, naming rule, output location, EXIF/GPS, folder structure and overwrite in the right-side Inspector.
 5. (Optional) Switch UI language, or choose Light / Dark / System theme in the Inspector.
 6. Click **Start**.
-7. When finished, click **Open output folder**.
+7. When finished, open a converted image from its row, or click **Open output folder**.
 
 ## Tech stack
 
@@ -126,9 +129,11 @@ JPG、PNG、WebP、BMP、TIFF、HEIC/HEIF 之间互转。核心原则：**绝不
 - 拖拽单个文件或整个文件夹（递归扫描子目录），不支持的文件自动忽略并计数提示。
 - 输出 JPG / PNG / WebP / BMP / TIFF；支持同格式重新编码用于压缩。
 - 可调 JPG/WebP 质量、输出目录、命名规则、目录结构保留。
+- 转换后显示每个文件和整体已节省空间。
 - 支持保留 EXIF，**默认剥离 GPS 位置信息**。
 - 先写临时文件再移动到最终路径；重名自动加 `_1`、`_2` 后缀，默认不覆盖。
 - 取消后再次开始会**续跑**，已成功的文件不重复转换；转换在后台执行，界面不卡死。
+- 成功行可打开转换后的图片、在文件夹中显示或复制输出路径；失败行可单独重试。
 - **浅色 / 深色 / 跟随系统主题**在右侧 Inspector 中集中设置并记忆；**14 种界面语言**。
 
 **运行**

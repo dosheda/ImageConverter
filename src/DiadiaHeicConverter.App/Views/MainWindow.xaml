@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:DiadiaHeicConverter.App.Converters"
         mc:Ignorable="d"
         Title="{DynamicResource AppTitle}"
         Icon="/Resources/app.ico"
@@ -17,6 +18,9 @@
         AllowDrop="True"
         DragOver="OnDragOver"
         Drop="OnDrop">
+    <Window.Resources>
+        <conv:RatioToStrokeDashArrayConverter x:Key="RatioToStrokeDashArrayConverter" />
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -81,8 +85,16 @@
                                 Background="{DynamicResource AccentSoftBrush}"
                                 Margin="0,0,18,0">
                             <Grid>
-                                <Ellipse Stroke="{DynamicResource AccentBrush}" StrokeThickness="5" Margin="5" />
-                                <TextBlock Text="{Binding SucceededCount}" FontSize="15" FontWeight="Bold"
+                                <Ellipse Stroke="{DynamicResource TrackBrush}" StrokeThickness="5" Margin="5" />
+                                <Ellipse Stroke="{DynamicResource AccentBrush}" StrokeThickness="5" Margin="5"
+                                         StrokeDashArray="{Binding CompletionRatio, Converter={StaticResource RatioToStrokeDashArrayConverter}}"
+                                         StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                         RenderTransformOrigin="0.5,0.5">
+                                    <Ellipse.RenderTransform>
+                                        <RotateTransform Angle="-90" />
+                                    </Ellipse.RenderTransform>
+                                </Ellipse>
+                                <TextBlock Text="{Binding CompletionPercentDisplay}" FontSize="13" FontWeight="Bold"
                                            Foreground="{DynamicResource AccentBrush}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Grid>
@@ -98,15 +110,37 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding CurrentMessage}" FontSize="13"
-                                       Foreground="{DynamicResource MutedTextBrush}"
-                                       TextTrimming="CharacterEllipsis" />
-                            <ProgressBar Minimum="0"
-                                         Maximum="{Binding ProgressMaximum, Mode=OneWay}"
-                                         Value="{Binding ProgressValue, Mode=OneWay}"
-                                         Height="6" Margin="0,8,0,0" />
-                        </StackPanel>
+                        <Grid Grid.Column="2" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="180" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="{Binding CurrentMessage}" FontSize="13"
+                                           Foreground="{DynamicResource MutedTextBrush}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <ProgressBar Minimum="0"
+                                             Maximum="{Binding ProgressMaximum, Mode=OneWay}"
+                                             Value="{Binding ProgressValue, Mode=OneWay}"
+                                             Height="6" Margin="0,8,24,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{DynamicResource StatSpaceSaved}" FontSize="11.5"
+                                           Foreground="{DynamicResource MutedTextBrush}" />
+                                <TextBlock Margin="0,2,0,0">
+                                    <Run Text="{Binding SavedDisplay, Mode=OneWay}" FontSize="21" FontWeight="Bold"
+                                         Foreground="{DynamicResource SaveBrush}" />
+                                    <Run Text=" " />
+                                    <Run Text="{Binding AverageReductionDisplay, Mode=OneWay}" FontSize="12"
+                                         FontWeight="SemiBold" Foreground="{DynamicResource SaveBrush}" />
+                                </TextBlock>
+                                <ProgressBar Minimum="0" Maximum="100"
+                                             Value="{Binding AverageReductionPercent, Mode=OneWay}"
+                                             Foreground="{DynamicResource SaveBrush}"
+                                             Background="{DynamicResource SaveSoftBrush}"
+                                             Height="5" Margin="0,6,26,0" />
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </Border>
 
@@ -143,12 +177,25 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Style="{StaticResource FileRow}">
+                                    <Border.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenFileCommand}" />
+                                    </Border.InputBindings>
+                                    <Border.ContextMenu>
+                                        <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                            <MenuItem Header="{DynamicResource RowOpen}" Command="{Binding OpenFileCommand}" />
+                                            <MenuItem Header="{DynamicResource RowReveal}" Command="{Binding RevealCommand}" />
+                                            <MenuItem Header="{DynamicResource RowCopyPath}" Command="{Binding CopyOutputPathCommand}" />
+                                            <Separator />
+                                            <MenuItem Header="{DynamicResource RowOpenSource}" Command="{Binding OpenSourceFolderCommand}" />
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="132" />
                                             <ColumnDefinition Width="92" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
                                         <Border Grid.Column="0" Style="{StaticResource FormatBadge}" Margin="0,0,13,0">
@@ -178,11 +225,21 @@
                                         </StackPanel>
 
                                         <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                            <TextBlock Text="{Binding SizeSummaryDisplay}" FontSize="12.5"
-                                                       Foreground="{DynamicResource MutedTextBrush}"
-                                                       TextAlignment="Right" TextTrimming="CharacterEllipsis" />
-                                            <TextBlock Text="{Binding OutputPath}" Margin="0,2,0,0" FontSize="10.5"
-                                                       Foreground="{DynamicResource SubtleTextBrush}"
+                                            <TextBlock Text="{Binding SizeChangeDisplay}" FontSize="12.5"
+                                                       TextAlignment="Right" TextTrimming="CharacterEllipsis">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding ReductionDisplay}" Margin="0,2,0,0" FontSize="11"
+                                                       FontWeight="Bold" Foreground="{DynamicResource SaveBrush}"
                                                        TextAlignment="Right" TextTrimming="CharacterEllipsis" />
                                         </StackPanel>
 
@@ -194,6 +251,33 @@
                                                            Margin="6,0,0,0" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Border>
+
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
+                                            <Button Content="{DynamicResource RowOpen}" Command="{Binding OpenFileCommand}">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource RowActionButton}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Succeeded">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button Content="{DynamicResource RowRetry}" Command="{Binding RetryCommand}">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource RowActionButton}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                        </StackPanel>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

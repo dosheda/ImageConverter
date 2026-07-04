@@ -27,7 +27,8 @@ public sealed class MainViewModelResumeTests
             }),
             new NullDialogService(),
             new LocalizationService(),
-            new ThemeService());
+            new ThemeService(),
+            new NullFileLauncherService());
 
         viewModel.Items.Add(new ConversionItemViewModel(new ConversionTaskItem
         {
@@ -67,7 +68,8 @@ public sealed class MainViewModelResumeTests
             }),
             new NullDialogService(),
             new LocalizationService(),
-            new ThemeService());
+            new ThemeService(),
+            new NullFileLauncherService());
 
         viewModel.Items.Add(new ConversionItemViewModel(new ConversionTaskItem
         {
@@ -100,7 +102,8 @@ public sealed class MainViewModelResumeTests
             }),
             new NullDialogService(),
             new LocalizationService(),
-            new ThemeService());
+            new ThemeService(),
+            new NullFileLauncherService());
 
         viewModel.Items.Add(new ConversionItemViewModel(new ConversionTaskItem
         {
@@ -130,7 +133,8 @@ public sealed class MainViewModelResumeTests
             }),
             new NullDialogService(),
             new LocalizationService(),
-            new ThemeService());
+            new ThemeService(),
+            new NullFileLauncherService());
 
         var formats = viewModel.OutputFormatOptions.Select(option => option.Value).ToList();
 
@@ -155,12 +159,52 @@ public sealed class MainViewModelResumeTests
             settingsService,
             new NullDialogService(),
             new LocalizationService(),
-            new ThemeService());
+            new ThemeService(),
+            new NullFileLauncherService());
 
         viewModel.SelectedTheme = "System";
 
         Assert.True(viewModel.IsSystem);
         Assert.Equal("System", settingsService.SavedSettings?.Theme);
+    }
+
+    [Fact]
+    public void Aggregate_stats_include_saved_bytes_and_completion_ratio()
+    {
+        using var temp = new TestTempDirectory();
+        var viewModel = new MainViewModel(
+            new EmptyFileScannerService(),
+            new RecordingConvertService(),
+            new OutputPathService(new NamingService()),
+            new TestSettingsService(new AppSettings
+            {
+                OutputDirectory = temp.Combine("out"),
+                LanguageCode = "zh-Hans"
+            }),
+            new NullDialogService(),
+            new LocalizationService(),
+            new ThemeService(),
+            new NullFileLauncherService());
+
+        viewModel.Items.Add(new ConversionItemViewModel(new ConversionTaskItem
+        {
+            SourcePath = temp.Combine("done.heic"),
+            FileSizeBytes = 1000,
+            OutputSizeBytes = 400,
+            Status = ConversionStatus.Succeeded
+        }));
+        viewModel.Items.Add(new ConversionItemViewModel(new ConversionTaskItem
+        {
+            SourcePath = temp.Combine("failed.heic"),
+            FileSizeBytes = 1000,
+            Status = ConversionStatus.Failed
+        }));
+
+        Assert.Equal(600, viewModel.SavedBytes);
+        Assert.Equal("600 B", viewModel.SavedDisplay);
+        Assert.Equal("−60%", viewModel.AverageReductionDisplay);
+        Assert.Equal(1, viewModel.CompletedCount);
+        Assert.Equal(1, viewModel.CompletionRatio);
     }
 
     [Fact]
@@ -178,7 +222,8 @@ public sealed class MainViewModelResumeTests
             }),
             new NullDialogService(),
             new LocalizationService(),
-            new ThemeService());
+            new ThemeService(),
+            new NullFileLauncherService());
 
         await viewModel.AddPathsAsync([temp.Path]);
 
@@ -241,5 +286,20 @@ public sealed class MainViewModelResumeTests
     private sealed class NullDialogService : IDialogService
     {
         public string? SelectFolder(string initialDirectory) => null;
+    }
+
+    private sealed class NullFileLauncherService : IFileLauncherService
+    {
+        public void OpenFile(string path)
+        {
+        }
+
+        public void RevealInExplorer(string path)
+        {
+        }
+
+        public void OpenFolder(string path)
+        {
+        }
     }
 }

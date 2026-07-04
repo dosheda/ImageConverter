@@ -81,6 +81,33 @@ public sealed class ImageConvertServiceCancellationTests
         Assert.Equal(2, summary.SucceededCount);
     }
 
+    [Fact]
+    public async Task ConvertAsync_records_output_size_after_success()
+    {
+        using var temp = new TestTempDirectory();
+        var source = temp.Combine("pending.heic");
+        await File.WriteAllTextAsync(source, "fake");
+
+        var service = new ImageConvertService(
+            new StubMetadataService(),
+            new OutputPathService(new NamingService()),
+            new WritingConvertEngine(),
+            new NullLogService());
+        var item = new ConversionTaskItem
+        {
+            SourcePath = source,
+            FileSizeBytes = 10
+        };
+
+        await service.ConvertAsync(
+            [item],
+            new AppSettings { OutputDirectory = temp.Combine("out") },
+            progress: null,
+            CancellationToken.None);
+
+        Assert.Equal(5, item.OutputSizeBytes);
+    }
+
     private sealed class WaitingConvertEngine : IImageConvertEngine
     {
         public TaskCompletionSource Started { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -113,6 +140,27 @@ public sealed class ImageConvertServiceCancellationTests
         {
             ConvertedSources.Add(item.SourcePath);
             return Task.FromResult(ConversionResult.Success(item.OutputPath));
+        }
+    }
+
+    private sealed class WritingConvertEngine : IImageConvertEngine
+    {
+        public string EngineName => "writing-test-engine";
+
+        public async Task<ConversionResult> ConvertAsync(
+            ConversionTaskItem item,
+            AppSettings settings,
+            PhotoMetadata metadata,
+            CancellationToken cancellationToken)
+        {
+            var directory = Path.GetDirectoryName(item.OutputPath);
+            if (!string.IsNullOrWhiteSpace(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await File.WriteAllTextAsync(item.OutputPath, "12345", cancellationToken);
+            return ConversionResult.Success(item.OutputPath);
         }
     }
 

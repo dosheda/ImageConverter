@@ -75,6 +75,7 @@ public sealed class ImageConvertService(
 
                 if (result.Status == ConversionStatus.Succeeded)
                 {
+                    item.OutputSizeBytes = TryGetOutputSize(item.OutputPath);
                     await logService.WriteAsync($"SUCCESS input=\"{item.SourcePath}\" output=\"{item.OutputPath}\"", cancellationToken);
                 }
                 else if (result.Status == ConversionStatus.Cancelled)
@@ -145,5 +146,17 @@ public sealed class ImageConvertService(
             items.Count(item => item.Status == ConversionStatus.Failed),
             items.Count(item => item.Status == ConversionStatus.Skipped),
             items.Count(item => item.Status == ConversionStatus.Cancelled));
+    }
+
+    private static long? TryGetOutputSize(string outputPath)
+    {
+        try
+        {
+            return File.Exists(outputPath) ? new FileInfo(outputPath).Length : null;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

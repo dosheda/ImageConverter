@@ -17,6 +17,7 @@ public sealed class MainViewModel : ObservableObject
     private readonly IDialogService _dialogService;
     private readonly ILocalizationService _localizationService;
     private readonly IThemeService _themeService;
+    private readonly IFileLauncherService _fileLauncherService;
     private CancellationTokenSource? _conversionCancellation;
     private string _outputDirectory;
     private string _selectedLanguageCode;
@@ -40,7 +41,8 @@ public sealed class MainViewModel : ObservableObject
         ISettingsService settingsService,
         IDialogService dialogService,
         ILocalizationService localizationService,
-        IThemeService themeService)
+        IThemeService themeService,
+        IFileLauncherService fileLauncherService)
     {
         _fileScannerService = fileScannerService;
         _imageConvertService = imageConvertService;
@@ -49,6 +51,7 @@ public sealed class MainViewModel : ObservableObject
         _dialogService = dialogService;
         _localizationService = localizationService;
         _themeService = themeService;
+        _fileLauncherService = fileLauncherService;
 
         var settings = settingsService.Load();
         _selectedLanguageCode = localizationService.NormalizeLanguageCode(settings.LanguageCode);
@@ -289,6 +292,8 @@ public sealed class MainViewModel : ObservableObject
 
     public int SucceededCount => Items.Count(item => item.Status == ConversionStatus.Succeeded);
 
+    public int CompletedCount => SucceededCount;
+
     public int FailedCount => Items.Count(item => item.Status == ConversionStatus.Failed);
 
     public int PendingCount => Items.Count(item => item.Status == ConversionStatus.Pending);
@@ -299,7 +304,49 @@ public sealed class MainViewModel : ObservableObject
 
     public string StartButtonText => AppStrings.Format("StartButtonWithCountFmt", RunnableCount);
 
+    public double CompletionRatio => TotalCount == 0
+        ? 0
+        : Math.Clamp(FinishedCount / (double)TotalCount, 0, 1);
+
+    public string CompletionPercentDisplay => $"{CompletionRatio * 100:0}%";
+
+    public long SavedBytes => Items
+        .Where(item => item.Status == ConversionStatus.Succeeded && item.Model.OutputSizeBytes is not null)
+        .Sum(item => Math.Max(0, item.Model.FileSizeBytes - item.Model.OutputSizeBytes!.Value));
+
+    public string SavedDisplay => ConversionItemViewModel.FormatFileSize(SavedBytes);
+
+    public double AverageReductionRatio
+    {
+        get
+        {
+            var succeededItems = Items
+                .Where(item => item.Status == ConversionStatus.Succeeded && item.Model.OutputSizeBytes is not null)
+                .ToList();
+            var inputBytes = succeededItems.Sum(item => item.Model.FileSizeBytes);
+            if (inputBytes <= 0)
+            {
+                return 0;
+            }
+
+            var outputBytes = succeededItems.Sum(item => item.Model.OutputSizeBytes!.Value);
+            return Math.Clamp(1 - (outputBytes / (double)inputBytes), 0, 1);
+        }
+    }
+
+    public double AverageReductionPercent => AverageReductionRatio * 100;
+
+    public string AverageReductionDisplay => AppStrings.Format(
+        "ReductionFmt",
+        (int)Math.Round(AverageReductionRatio * 100));
+
     public bool HasOutputDirectory => !string.IsNullOrWhiteSpace(OutputDirectory);
+
+    private int FinishedCount => Items.Count(item => item.Status is
+        ConversionStatus.Succeeded or
+        ConversionStatus.Failed or
+        ConversionStatus.Skipped or
+        ConversionStatus.Cancelled);
 
     public async Task AddPathsAsync(IEnumerable<string> paths)
     {
@@ -321,7 +368,7 @@ public sealed class MainViewModel : ObservableObject
                 continue;
             }
 
-            Items.Add(new ConversionItemViewModel(item));
+            Items.Add(CreateItemViewModel(item));
             added++;
         }
 
@@ -346,6 +393,27 @@ public sealed class MainViewModel : ObservableObject
             return;
         }
 
+        await ConvertItemsAsync(runnableItems);
+    }
+
+    private async Task RetryItemAsync(ConversionItemViewModel item)
+    {
+        if (IsConverting || item.Status != ConversionStatus.Failed)
+        {
+            return;
+        }
+
+        CurrentMessage = AppStrings.Format("RetryingFileMessageFormat", Path.GetFileName(item.SourcePath));
+        await ConvertItemsAsync([item]);
+    }
+
+    private async Task ConvertItemsAsync(IReadOnlyList<ConversionItemViewModel> runnableItems)
+    {
+        if (runnableItems.Count == 0)
+        {
+            return;
+        }
+
         IsConverting = true;
         ProgressValue = 0;
         ProgressMaximum = Math.Max(runnableItems.Count, 1);
@@ -362,6 +430,7 @@ public sealed class MainViewModel : ObservableObject
             {
                 item.Model.Status = ConversionStatus.Pending;
                 item.Model.FailureReason = string.Empty;
+                item.Model.OutputSizeBytes = null;
                 item.RefreshFromModel();
             }
 
@@ -373,12 +442,17 @@ public sealed class MainViewModel : ObservableObject
 
             RefreshAllItems();
             var summary = CreateOverallSummary();
-            CurrentMessage = AppStrings.Format(
-                "CompletedMessageFormat",
-                summary.TotalCount,
-                summary.SucceededCount,
-                summary.FailedCount,
-                summary.SkippedCount + summary.CancelledCount);
+            CurrentMessage = summary.FailedCount == 0 &&
+                summary.SkippedCount == 0 &&
+                summary.CancelledCount == 0 &&
+                summary.SucceededCount == summary.TotalCount
+                    ? $"✓ {AppStrings.Get("AllDone")}"
+                    : AppStrings.Format(
+                        "CompletedMessageFormat",
+                        summary.TotalCount,
+                        summary.SucceededCount,
+                        summary.FailedCount,
+                        summary.SkippedCount + summary.CancelledCount);
         }
         finally
         {
@@ -433,12 +507,7 @@ public sealed class MainViewModel : ObservableObject
             : OutputDirectory;
 
         Directory.CreateDirectory(directory);
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = "explorer.exe",
-            Arguments = $"\"{directory}\"",
-            UseShellExecute = true
-        });
+        _fileLauncherService.OpenFolder(directory);
     }
 
     private void OpenExternalLink(string url)
@@ -491,15 +560,37 @@ public sealed class MainViewModel : ObservableObject
         }
     }
 
+    private ConversionItemViewModel CreateItemViewModel(ConversionTaskItem item)
+    {
+        return new ConversionItemViewModel(
+            item,
+            _fileLauncherService,
+            RetryItemAsync,
+            SetCurrentMessage);
+    }
+
+    private void SetCurrentMessage(string message)
+    {
+        CurrentMessage = message;
+    }
+
     private void RefreshCounts()
     {
         OnPropertyChanged(nameof(TotalCount));
         OnPropertyChanged(nameof(SucceededCount));
+        OnPropertyChanged(nameof(CompletedCount));
         OnPropertyChanged(nameof(FailedCount));
         OnPropertyChanged(nameof(PendingCount));
         OnPropertyChanged(nameof(SkippedCount));
         OnPropertyChanged(nameof(RunnableCount));
         OnPropertyChanged(nameof(StartButtonText));
+        OnPropertyChanged(nameof(CompletionRatio));
+        OnPropertyChanged(nameof(CompletionPercentDisplay));
+        OnPropertyChanged(nameof(SavedBytes));
+        OnPropertyChanged(nameof(SavedDisplay));
+        OnPropertyChanged(nameof(AverageReductionRatio));
+        OnPropertyChanged(nameof(AverageReductionPercent));
+        OnPropertyChanged(nameof(AverageReductionDisplay));
         RefreshCommandStates();
     }
 

@@ -94,4 +94,6 @@
     <sys:String x:Key="StartButtonWithCountFmt">开始转换 {0} 张</sys:String>
     <sys:String x:Key="ReductionFmt">−{0}%</sys:String>
     <sys:String x:Key="AboutMetaSuffix">MIT · 离线运行</sys:String>
+    <sys:String x:Key="OutputPathCopiedMessage">输出路径已复制。</sys:String>
+    <sys:String x:Key="RetryingFileMessageFormat">正在重试：{0}</sys:String>
 </ResourceDictionary>

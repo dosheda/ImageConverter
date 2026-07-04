@@ -18,6 +18,7 @@ public partial class MainWindow : Window
         var logService = new LogService();
         var localizationService = new LocalizationService();
         var themeService = new ThemeService();
+        var fileLauncherService = new FileLauncherService(logService);
         var convertEngine = new MagickImageConvertEngine(outputPathService);
         var imageConvertService = new ImageConvertService(
             metadataService,
@@ -32,7 +33,8 @@ public partial class MainWindow : Window
             settingsService,
             new WindowsDialogService(),
             localizationService,
-            themeService);
+            themeService,
+            fileLauncherService);
     }
 
     private void OnDragOver(object sender, System.Windows.DragEventArgs e)

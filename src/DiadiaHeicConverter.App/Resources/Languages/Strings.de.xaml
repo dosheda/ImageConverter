@@ -94,4 +94,6 @@
     <sys:String x:Key="StartButtonWithCountFmt">Convert {0} images</sys:String>
     <sys:String x:Key="ReductionFmt">−{0}%</sys:String>
     <sys:String x:Key="AboutMetaSuffix">MIT · Offline</sys:String>
+    <sys:String x:Key="OutputPathCopiedMessage">Output path copied.</sys:String>
+    <sys:String x:Key="RetryingFileMessageFormat">Retrying: {0}</sys:String>
 </ResourceDictionary>

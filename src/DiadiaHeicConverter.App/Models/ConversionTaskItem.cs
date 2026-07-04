@@ -12,6 +12,8 @@ public sealed class ConversionTaskItem
 
     public long FileSizeBytes { get; init; }
 
+    public long? OutputSizeBytes { get; set; }
+
     public ConversionStatus Status { get; set; } = ConversionStatus.Pending;
 
     public string FailureReason { get; set; } = string.Empty;

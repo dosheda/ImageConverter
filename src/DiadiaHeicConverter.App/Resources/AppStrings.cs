@@ -72,7 +72,9 @@ public static class AppStrings
         ["LinkLicenses"] = "开源许可",
         ["StartButtonWithCountFmt"] = "开始转换 {0} 张",
         ["ReductionFmt"] = "−{0}%",
-        ["AboutMetaSuffix"] = "MIT · 离线运行"
+        ["AboutMetaSuffix"] = "MIT · 离线运行",
+        ["OutputPathCopiedMessage"] = "输出路径已复制。",
+        ["RetryingFileMessageFormat"] = "正在重试：{0}"
     };
 
     public static string Get(string key)
