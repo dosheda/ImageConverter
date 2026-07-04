@@ -9,9 +9,16 @@ photos are never deleted and never overwritten**.
 ![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6)
 
-| Light | Dark |
-| :---: | :---: |
-| ![Light theme](docs/screenshots/light.png) | ![Dark theme](docs/screenshots/dark.png) |
+### 🌞 Light theme
+
+<img src="docs/screenshots/light.png" alt="Diadia Image Converter — light theme" width="100%" />
+
+### 🌙 Dark theme
+
+<img src="docs/screenshots/dark.png" alt="Diadia Image Converter — dark theme" width="100%" />
+
+> **Download:** grab the latest Windows x64 portable build from the
+> [**Releases**](https://github.com/dosheda/ImageConverter/releases) page.
 
 ---
 

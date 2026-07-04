@@ -97,6 +97,15 @@ public sealed class MainViewModel : ObservableObject
 
     public IRelayCommand ToggleThemeCommand { get; }
 
+    public string AppVersion
+    {
+        get
+        {
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            return version is null ? string.Empty : $"v{version.Major}.{version.Minor}.{version.Build}";
+        }
+    }
+
     public bool IsDarkTheme => string.Equals(_theme, "Dark", StringComparison.OrdinalIgnoreCase);
 
     public string ThemeToggleGlyph => IsDarkTheme ? "☀" : "☽";

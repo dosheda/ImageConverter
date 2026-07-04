@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to build a release for (e.g. v0.2.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Resolve version
+        id: ver
+        shell: pwsh
+        run: |
+          $tag = "${{ github.event.inputs.tag || github.ref_name }}"
+          $version = $tag -replace '^v', ''
+          "tag=$tag"          | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "version=$version"  | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Write-Host "Building $tag (version $version)"
+
+      - name: Publish (win-x64, self-contained portable)
+        run: >
+          dotnet publish .\src\DiadiaHeicConverter.App\DiadiaHeicConverter.App.csproj
+          -c Release -r win-x64 --self-contained true
+          -p:Version=${{ steps.ver.outputs.version }}
+          -o publish\DiadiaImageConverter-win-x64
+
+      - name: Zip portable build
+        shell: pwsh
+        run: >
+          Compress-Archive -Path publish\DiadiaImageConverter-win-x64\*
+          -DestinationPath DiadiaImageConverter-${{ steps.ver.outputs.version }}-win-x64.zip
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.ver.outputs.tag }}
+          name: Diadia Image Converter ${{ steps.ver.outputs.tag }}
+          generate_release_notes: true
+          files: DiadiaImageConverter-${{ steps.ver.outputs.version }}-win-x64.zip

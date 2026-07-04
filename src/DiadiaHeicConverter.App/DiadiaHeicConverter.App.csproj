@@ -10,6 +10,9 @@
     <AssemblyName>DiadiaImageConverter</AssemblyName>
     <Product>Diadia Image Converter</Product>
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+    <Version>0.2.0</Version>
+    <Company>dosheda</Company>
+    <Copyright>Copyright © 2026 dosheda</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
