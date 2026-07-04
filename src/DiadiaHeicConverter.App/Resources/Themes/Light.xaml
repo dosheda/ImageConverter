@@ -28,6 +28,8 @@
     <Color x:Key="AccentPressedColor">#3730A3</Color>
     <Color x:Key="AccentSoftColor">#EEF2FF</Color>
     <Color x:Key="AccentForegroundColor">#FFFFFF</Color>
+    <Color x:Key="FolderIconFillColor">#F59E0B</Color>
+    <Color x:Key="FolderIconStrokeColor">#111827</Color>
 
     <!-- Drop zone -->
     <Color x:Key="DropZoneBackgroundColor">#EEF2FF</Color>
@@ -87,6 +89,8 @@
     <SolidColorBrush x:Key="AccentPressedBrush" Color="{StaticResource AccentPressedColor}" />
     <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}" />
     <SolidColorBrush x:Key="AccentForegroundBrush" Color="{StaticResource AccentForegroundColor}" />
+    <SolidColorBrush x:Key="FolderIconFillBrush" Color="{StaticResource FolderIconFillColor}" />
+    <SolidColorBrush x:Key="FolderIconStrokeBrush" Color="{StaticResource FolderIconStrokeColor}" />
     <LinearGradientBrush x:Key="LogoBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="#6366F1" Offset="0" />
         <GradientStop Color="#7C3AED" Offset="0.55" />
